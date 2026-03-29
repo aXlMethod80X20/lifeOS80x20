@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>lifeOS80x20 — Convex Operator</title>
+<meta name="description" content="A life operating system for hybrid builders. Mental models, hybrid training, and antifragile investing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #06060a;
+  --surface: #0c0c12;
+  --surface-2: #131320;
+  --border: #1c1c30;
+  --border-light: #2a2a44;
+  --text: #ccccd4;
+  --text-bright: #eeeef2;
+  --text-dim: #55556a;
+  --gold: #c9a84c;
+  --gold-soft: rgba(201, 168, 76, 0.12);
+  --teal: #4cc9a8;
+  --teal-soft: rgba(76, 201, 168, 0.10);
+  --red-soft: rgba(201, 76, 76, 0.10);
+  --red: #c97a4c;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Mono', monospace;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* Grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+a { color: var(--teal); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* --- NAV --- */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1.2rem 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(6, 6, 10, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+nav .logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-bright);
+}
+
+nav .logo span { color: var(--gold); }
+
+nav .nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+nav .nav-links a {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.3s;
+}
+
+nav .nav-links a:hover { color: var(--text-bright); text-decoration: none; }
+
+/* --- HERO --- */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 6rem 2rem 4rem;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(ellipse, rgba(201, 168, 76, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-tag {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.2s;
+}
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(3rem, 8vw, 7rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.4s;
+}
+
+.hero h1 .accent { color: var(--gold); }
+
+.hero-sub {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  color: var(--text-dim);
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+  max-width: 500px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.6s;
+}
+
+/* Convex curve SVG */
+.convex-curve {
+  width: min(400px, 80vw);
+  height: 120px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.8s;
+  margin-bottom: 3rem;
+}
+
+.convex-curve path {
+  stroke: var(--gold);
+  stroke-width: 2;
+  fill: none;
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  animation: drawLine 2s ease forwards 1.2s;
+}
+
+.convex-curve .axis {
+  stroke: var(--border-light);
+  stroke-width: 1;
+}
+
+.convex-curve text {
+  fill: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+}
+
+.hero-philosophy {
+  display: flex;
+  gap: 3rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 1s;
+}
+
+.hero-philosophy .pill {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.pill .dot.gold { background: var(--gold); }
+.pill .dot.teal { background: var(--teal); }
+
+/* --- SECTIONS --- */
+section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 6rem 2rem;
+}
+
+.section-divider {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section-divider hr {
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+.section-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.section-label::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--border-light);
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  color: var(--text-bright);
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+.section-intro {
+  max-width: 600px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  line-height: 1.8;
+  margin-bottom: 3rem;
+}
+
+/* --- MENTAL MODELS --- */
+.models-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.model-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.model-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--teal), transparent);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.model-card:hover {
+  border-color: var(--border-light);
+  transform: translateY(-2px);
+}
+
+.model-card:hover::before { opacity: 1; }
+
+.model-card .card-num {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+
+.model-card h3 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-bright);
+  margin-bottom: 0.8rem;
+}
+
+.model-card p {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+.model-card .expand-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, margin-top 0.3s ease;
+}
+
+.model-card.expanded .expand-content {
+  max-height: 300px;
+  margin-top: 1rem;
+}
+
+.model-card .expand-content p {
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--text);
+}
+
+.quote-block {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: var(--surface);
+  border-left: 2px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+}
+
+.quote-block blockquote {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--text-bright);
+  line-height: 1.6;
+  margin-bottom: 0.8rem;
+}
+
+.quote-block cite {
+  font-family: 'DM Mono', monospace;
+  font-style: normal;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* --- TRAINING --- */
+.training-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.day-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.2rem 0.8rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.day-card.rest {
+  opacity: 0.4;
+}
+
+.day-card.active {
+  border-color: var(--gold);
+  background: var(--gold-soft);
+}
+
+.day-card .day-name {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.6rem;
+}
+
+.day-card .day-type {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.7rem;
+  color: var(--text-bright);
+  margin-bottom: 0.8rem;
+  min-height: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.day-card .day-type.strength { color: var(--gold); }
+.day-card .day-type.jiujitsu { color: var(--teal); }
+.day-card .day-type.cardio { color: var(--red); }
+
+.day-card .check-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--border-light);
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: transparent;
+  font-size: 0.7rem;
+}
+
+.day-card .check-btn:hover {
+  border-color: var(--gold);
+}
+
+.day-card .check-btn.checked {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--bg);
+}
+
+.training-stats {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.stat-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  flex: 1;
+}
+
+.stat-block .stat-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.4rem;
+}
+
+.stat-block .stat-value {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: var(--text-bright);
+}
+
+.stat-block .stat-value .unit {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--text-dim);
+  margin-left: 0.3rem;
+}
+
+.training-note {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-style: italic;
+  font-family: 'Instrument Serif', serif;
+}
+
+/* --- INVESTMENT --- */
+.barbell-visual {
+  display: flex;
+  align-items: center;
+  margin-bottom: 3rem;
+  gap: 0;
+  height: 80px;
+}
+
+.barbell-safe {
+  flex: 0 0 80%;
+  background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface) 100%);
+  border: 1px solid var(--border);
+  border-radius: 8px 0 0 8px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.3rem;
+  position: relative;
+}
+
+.barbell-safe .barbell-pct {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: var(--text-dim);
+}
+
+.barbell-safe .barbell-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.barbell-aggressive {
+  flex: 0 0 20%;
+  background: var(--gold-soft);
+  border: 1px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.barbell-aggressive .barbell-pct {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: var(--gold);
+}
+
+.barbell-aggressive .barbell-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.invest-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.invest-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.invest-card h3 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.invest-card.linear h3 { color: var(--text-dim); }
+.invest-card.convex h3 { color: var(--gold); }
+
+.invest-card .curve-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.invest-card.linear .curve-label { color: var(--text-dim); }
+.invest-card.convex .curve-label { color: var(--gold); }
+
+.invest-card ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.invest-card li {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  padding-left: 1rem;
+  position: relative;
+}
+
+.invest-card li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--border-light);
+}
+
+.invest-card p {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+.markowitz-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.markowitz-block h3 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--teal);
+  margin-bottom: 0.5rem;
+}
+
+.markowitz-block p {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.markowitz-block p:last-child { margin-bottom: 0; }
+
+.frontier-svg {
+  width: 100%;
+  max-width: 500px;
+  height: 200px;
+  margin: 1.5rem 0;
+}
+
+.frontier-svg .frontier-line {
+  stroke: var(--teal);
+  stroke-width: 2;
+  fill: none;
+}
+
+.frontier-svg .frontier-fill {
+  fill: var(--teal-soft);
+}
+
+.frontier-svg .axis-line {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.frontier-svg text {
+  fill: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+}
+
+.frontier-svg .dot-safe {
+  fill: var(--text-dim);
+}
+
+.frontier-svg .dot-optimal {
+  fill: var(--teal);
+}
+
+.frontier-svg .dot-aggressive {
+  fill: var(--gold);
+}
+
+/* --- FOOTER --- */
+footer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer .footer-left {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+footer .footer-left span { color: var(--gold); }
+
+footer .footer-right {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes drawLine {
+  to { stroke-dashoffset: 0; }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered children */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.reveal-stagger.visible > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.08s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.16s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.24s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.32s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(6) { transition-delay: 0.40s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(7) { transition-delay: 0.48s; opacity: 1; transform: translateY(0); }
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  nav .nav-links { gap: 1rem; }
+  nav .nav-links a { font-size: 0.6rem; }
+  section { padding: 4rem 1.5rem; }
+  .hero-philosophy { flex-direction: column; gap: 1rem; align-items: center; }
+  .training-week {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .training-stats { flex-direction: column; gap: 1rem; }
+  .invest-grid { grid-template-columns: 1fr; }
+  .barbell-visual { flex-direction: column; height: auto; }
+  .barbell-safe, .barbell-aggressive {
+    width: 100%;
+    height: 60px;
+    border-radius: 8px;
+    flex: none;
+  }
+  footer { flex-direction: column; gap: 1rem; text-align: center; }
+}
+
+@media (max-width: 480px) {
+  .training-week {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .models-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">lifeOS<span>80x20</span></div>
+  <ul class="nav-links">
+    <li><a href="#models">Mental Models</a></li>
+    <li><a href="#training">Training</a></li>
+    <li><a href="#invest">Investing</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-tag">Life Operating System for Hybrid Builders</p>
+  <h1>Convex<br><span class="accent">Operator</span></h1>
+  <p class="hero-sub">Train your mind, discipline your body, optimize your risk.</p>
+
+  <svg class="convex-curve" viewBox="0 0 400 120">
+    <line class="axis" x1="40" y1="100" x2="380" y2="100"/>
+    <line class="axis" x1="40" y1="10" x2="40" y2="100"/>
+    <text x="200" y="116">exposure</text>
+    <text x="8" y="58" transform="rotate(-90, 16, 58)">payoff</text>
+    <!-- Linear (boring) -->
+    <line class="axis" x1="40" y1="100" x2="360" y2="28" style="stroke-dasharray: 6 4;"/>
+    <!-- Convex (asymmetric upside) -->
+    <path d="M 40 98 Q 120 96 200 88 Q 280 72 330 40 Q 355 22 370 5"/>
+  </svg>
+
+  <div class="hero-philosophy">
+    <div class="pill"><span class="dot teal"></span> Bits move fast — train your mind</div>
+    <div class="pill"><span class="dot gold"></span> Atoms move slow — train your body</div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><hr></div>
+
+<!-- MENTAL MODELS -->
+<section id="models">
+  <div class="reveal">
+    <p class="section-label">Module 01 — Bits</p>
+    <h2 class="section-title">The Latticework</h2>
+    <p class="section-intro">
+      Technology moves exponentially. Your mental operating system must keep pace.
+      Build a latticework of models across disciplines — then use them to cut through noise,
+      find deep focus, and make decisions with clarity.
+    </p>
+  </div>
+
+  <div class="models-grid reveal-stagger">
+    <div class="model-card" onclick="this.classList.toggle('expanded')">
+      <p class="card-num">01</p>
+      <h3>Inversion</h3>
+      <p>Instead of asking how to succeed, ask how you would certainly fail — then avoid those things.</p>
+      <div class="expand-content">
+        <p>Munger's favorite tool. Don't ask "how do I build a great product?" Ask "what would make this product terrible?" Invert the problem. Avoid stupidity rather than seeking brilliance. In a world flooded with information, knowing what to ignore is the real edge.</p>
+      </div>
+    </div>
+
+    <div class="model-card" onclick="this.classList.toggle('expanded')">
+      <p class="card-num">02</p>
+      <h3>Second-Order Thinking</h3>
+      <p>First-level thinking is fast and obvious. Second-level thinking asks: and then what?</p>
+      <div class="expand-content">
+        <p>Howard Marks: everyone sees the obvious move. The edge is in seeing the consequences of the consequences. In tech, first-order thinking ships the feature. Second-order thinking asks what behavior it incentivizes, what breaks at scale, what competitors do in response.</p>
+      </div>
+    </div>
+
+    <div class="model-card" onclick="this.classList.toggle('expanded')">
+      <p class="card-num">03</p>
+      <h3>Circle of Competence</h3>
+      <p>Know the boundaries of what you truly understand. Operate inside. Expand deliberately.</p>
+      <div class="expand-content">
+        <p>The size of your circle matters less than knowing its edge. In a fast-moving software world, your competence surface area shrinks daily unless you deliberately maintain it. Deep focus work — not shallow content consumption — is how you expand the circle.</p>
+      </div>
+    </div>
+
+    <div class="model-card" onclick="this.classList.toggle('expanded')">
+      <p class="card-num">04</p>
+      <h3>Margin of Safety</h3>
+      <p>Build redundancy into every system. Never operate at the edge of capacity.</p>
+      <div class="expand-content">
+        <p>Engineers call it fault tolerance. Investors call it margin of safety. Sleep, recovery, financial runway, code test coverage — the buffer you maintain when things are good is what saves you when things go wrong. Fragile systems optimize for efficiency. Antifragile systems optimize for survival.</p>
+      </div>
+    </div>
+
+    <div class="model-card" onclick="this.classList.toggle('expanded')">
+      <p class="card-num">05</p>
+      <h3>Asymmetric Risk/Reward</h3>
+      <p>Seek bets where the downside is capped but the upside is uncapped. This is convexity.</p>
+      <div class="expand-content">
+        <p>The core thesis of this entire system. In career, investment, and skill-building — structure your exposure so that you survive the worst case and benefit disproportionately from the best case. Small, repeated, low-cost bets with open-ended upside. That's the convex operator's edge.</p>
+      </div>
+    </div>
+
+    <div class="model-card" onclick="this.classList.toggle('expanded')">
+      <p class="card-num">06</p>
+      <h3>Deep Focus Protocol</h3>
+      <p>Distraction is the tax on shallow thinking. Depth is the moat in an age of noise.</p>
+      <div class="expand-content">
+        <p>Block 2-4 hour windows. Kill notifications. Single-task. The ability to sustain deep concentration on cognitively demanding work is becoming rare and therefore increasingly valuable. Protect this capacity like your most critical asset — because it is.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote-block reveal">
+    <blockquote>"You've got to have models in your head. And you've got to array your experience — both vicarious and direct — on this latticework of models."</blockquote>
+    <cite>— Charlie Munger</cite>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><hr></div>
+
+<!-- HYBRID TRAINING -->
+<section id="training">
+  <div class="reveal">
+    <p class="section-label">Module 02 — Atoms</p>
+    <h2 class="section-title">Hybrid Training</h2>
+    <p class="section-intro">
+      The physical world doesn't move at software speed. Your body adapts slowly, demands consistency,
+      and rewards discipline over intensity. Train strength, combat, and cardio on a repeating weekly protocol.
+    </p>
+  </div>
+
+  <div class="training-week reveal-stagger" id="training-grid">
+    <div class="day-card" data-day="0">
+      <p class="day-name">Mon</p>
+      <p class="day-type strength">Strength</p>
+      <button class="check-btn" onclick="toggleDay(0)">&#10003;</button>
+    </div>
+    <div class="day-card rest" data-day="1">
+      <p class="day-name">Tue</p>
+      <p class="day-type">Recovery</p>
+      <button class="check-btn" onclick="toggleDay(1)">&#10003;</button>
+    </div>
+    <div class="day-card" data-day="2">
+      <p class="day-name">Wed</p>
+      <p class="day-type strength">Strength</p>
+      <button class="check-btn" onclick="toggleDay(2)">&#10003;</button>
+    </div>
+    <div class="day-card rest" data-day="3">
+      <p class="day-name">Thu</p>
+      <p class="day-type">Recovery</p>
+      <button class="check-btn" onclick="toggleDay(3)">&#10003;</button>
+    </div>
+    <div class="day-card rest" data-day="4">
+      <p class="day-name">Fri</p>
+      <p class="day-type">Recovery</p>
+      <button class="check-btn" onclick="toggleDay(4)">&#10003;</button>
+    </div>
+    <div class="day-card" data-day="5">
+      <p class="day-name">Sat</p>
+      <p class="day-type jiujitsu">Jiu-Jitsu</p>
+      <button class="check-btn" onclick="toggleDay(5)">&#10003;</button>
+    </div>
+    <div class="day-card" data-day="6">
+      <p class="day-name">Sun</p>
+      <p class="day-type cardio">Cardio</p>
+      <button class="check-btn" onclick="toggleDay(6)">&#10003;</button>
+    </div>
+  </div>
+
+  <div class="training-stats reveal-stagger">
+    <div class="stat-block">
+      <p class="stat-label">This Week</p>
+      <p class="stat-value"><span id="week-done">0</span><span class="unit">/ 4 sessions</span></p>
+    </div>
+    <div class="stat-block">
+      <p class="stat-label">Current Streak</p>
+      <p class="stat-value"><span id="streak-count">0</span><span class="unit">weeks</span></p>
+    </div>
+    <div class="stat-block">
+      <p class="stat-label">Protocol</p>
+      <p class="stat-value" style="font-size: 1rem; line-height: 1.4;">STR / STR / BJJ / Z2</p>
+    </div>
+  </div>
+
+  <p class="training-note reveal">Atoms don't lie. Show up. Do the work. Repeat every week.</p>
+</section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><hr></div>
+
+<!-- INVESTMENT -->
+<section id="invest">
+  <div class="reveal">
+    <p class="section-label">Module 03 — Capital</p>
+    <h2 class="section-title">The Barbell Protocol</h2>
+    <p class="section-intro">
+      Taleb's antifragile portfolio: be hyper-conservative with most of your capital,
+      and hyper-aggressive with a small portion. Nothing in the middle.
+      The middle is where fragility hides.
+    </p>
+  </div>
+
+  <div class="barbell-visual reveal">
+    <div class="barbell-safe">
+      <span class="barbell-pct">80%</span>
+      <span class="barbell-label">Safe / Linear</span>
+    </div>
+    <div class="barbell-aggressive">
+      <span class="barbell-pct">20%</span>
+      <span class="barbell-label">Convex</span>
+    </div>
+  </div>
+
+  <div class="invest-grid reveal-stagger">
+    <div class="invest-card linear">
+      <h3>Linear Investments</h3>
+      <p class="curve-label">Predictable returns, capped upside</p>
+      <p>These are the foundation. Boring by design. They preserve capital, generate steady compounding, and let you sleep at night. The 80% exists so the 20% can take real risk.</p>
+      <ul style="margin-top: 1rem;">
+        <li>Broad index funds (S&P 500, total market)</li>
+        <li>Government & investment-grade bonds</li>
+        <li>High-yield savings / money market</li>
+        <li>Dollar-cost averaging — always</li>
+      </ul>
+    </div>
+
+    <div class="invest-card convex">
+      <h3>Convex Investments</h3>
+      <p class="curve-label">Capped downside, uncapped upside</p>
+      <p>This is where asymmetry lives. You can lose your stake but never more. The upside, however, has no ceiling. Structure small bets that benefit from volatility and disorder.</p>
+      <ul style="margin-top: 1rem;">
+        <li>Asymmetric skill acquisition (coding, AI)</li>
+        <li>Early-stage / angel investments</li>
+        <li>Options strategies (defined risk)</li>
+        <li>Building equity in your own projects</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="markowitz-block reveal">
+    <h3>Markowitz & the Efficient Frontier</h3>
+    <p>
+      Harry Markowitz showed that diversification isn't just about spreading bets — it's about finding
+      the portfolio mix that maximizes return for a given level of risk. The efficient frontier is the
+      set of optimal portfolios. Anything below it means you're taking more risk than necessary.
+    </p>
+
+    <svg class="frontier-svg" viewBox="0 0 500 200">
+      <!-- Axes -->
+      <line class="axis-line" x1="50" y1="170" x2="470" y2="170"/>
+      <line class="axis-line" x1="50" y1="10" x2="50" y2="170"/>
+      <text x="250" y="195">Risk (Volatility) →</text>
+      <text x="10" y="95" transform="rotate(-90, 18, 95)">Return →</text>
+
+      <!-- Efficient frontier curve -->
+      <path class="frontier-fill" d="M 80 150 Q 140 60 250 40 Q 370 22 440 30 L 440 170 L 80 170 Z" opacity="0.3"/>
+      <path class="frontier-line" d="M 80 150 Q 140 60 250 40 Q 370 22 440 30"/>
+
+      <!-- Points -->
+      <circle class="dot-safe" cx="100" cy="138" r="6"/>
+      <text x="108" y="132" style="fill: var(--text-dim);">bonds</text>
+
+      <circle class="dot-optimal" cx="220" cy="46" r="7"/>
+      <text x="230" y="42" style="fill: var(--teal);">optimal</text>
+
+      <circle class="dot-aggressive" cx="400" cy="26" r="6"/>
+      <text x="370" y="18" style="fill: var(--gold);">convex bets</text>
+
+      <!-- Sub-optimal zone point -->
+      <circle cx="280" cy="120" r="4" fill="var(--text-dim)" opacity="0.3"/>
+      <text x="290" y="124" style="fill: var(--text-dim); opacity: 0.4;">sub-optimal</text>
+    </svg>
+
+    <p>
+      The barbell protocol positions you at both ends of the frontier: maximum safety (bonds, index)
+      and maximum convexity (asymmetric bets). By avoiding the mushy middle, you get a portfolio that
+      is antifragile — it actually benefits from volatility and disorder.
+    </p>
+  </div>
+
+  <div class="quote-block reveal" style="margin-top: 2rem;">
+    <blockquote>"The barbell strategy remedies the problem that risks of rare events are incomputable and fragile to estimation error."</blockquote>
+    <cite>— Nassim Nicholas Taleb, Antifragile</cite>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    lifeOS<span>80x20</span> — Convex Operator<br>
+    No login. No tracking. No SaaS. Just open it.
+  </div>
+  <div class="footer-right">
+    80/20 everything. Build daily. Train without excuses.
+  </div>
+</footer>
+
+<script>
+// --- SCROLL REVEAL ---
+const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+revealEls.forEach(el => observer.observe(el));
+
+// --- TRAINING TRACKER ---
+function getWeekKey() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 1);
+  const week = Math.ceil(((now - start) / 86400000 + start.getDay() + 1) / 7);
+  return `training-${now.getFullYear()}-w${week}`;
+}
+
+function loadTraining() {
+  const key = getWeekKey();
+  const data = JSON.parse(localStorage.getItem(key) || '{}');
+  return data;
+}
+
+function saveTraining(data) {
+  localStorage.setItem(getWeekKey(), JSON.stringify(data));
+}
+
+function toggleDay(dayIndex) {
+  const data = loadTraining();
+  data[dayIndex] = !data[dayIndex];
+  saveTraining(data);
+  renderTraining();
+}
+
+function renderTraining() {
+  const data = loadTraining();
+  const cards = document.querySelectorAll('.day-card');
+  let done = 0;
+
+  cards.forEach(card => {
+    const day = parseInt(card.dataset.day);
+    const btn = card.querySelector('.check-btn');
+    if (data[day]) {
+      btn.classList.add('checked');
+      card.classList.add('active');
+      // Count only training days (not rest)
+      if (!card.classList.contains('rest') || data[day]) done++;
+    } else {
+      btn.classList.remove('checked');
+      card.classList.remove('active');
+    }
+  });
+
+  // Count checked training days
+  const trainingDays = [0, 2, 5, 6]; // Mon, Wed, Sat, Sun
+  let trainDone = 0;
+  trainingDays.forEach(d => { if (data[d]) trainDone++; });
+  document.getElementById('week-done').textContent = trainDone;
+
+  // Streak (count consecutive completed weeks)
+  let streak = 0;
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const startOfYear = new Date(currentYear, 0, 1);
+  const currentWeek = Math.ceil(((now - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
+
+  for (let w = currentWeek; w > 0; w--) {
+    const wKey = `training-${currentYear}-w${w}`;
+    const wData = JSON.parse(localStorage.getItem(wKey) || '{}');
+    const wDone = trainingDays.filter(d => wData[d]).length;
+    if (wDone >= 3) {
+      streak++;
+    } else if (w < currentWeek) {
+      break;
+    }
+  }
+
+  document.getElementById('streak-count').textContent = streak;
+}
+
+// Highlight today
+function highlightToday() {
+  const dayMap = [0, 1, 2, 3, 4, 5, 6]; // Mon=0 in our grid
+  const today = (new Date().getDay() + 6) % 7; // Convert Sunday=0 to Monday=0
+  const cards = document.querySelectorAll('.day-card');
+  if (cards[today]) {
+    cards[today].style.boxShadow = 'inset 0 0 0 1px var(--text-dim)';
+  }
+}
+
+renderTraining();
+highlightToday();
+</script>
+
+</body>
+</html>
