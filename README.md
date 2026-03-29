@@ -1,3 +1,21 @@
 # lifeOS80x20
 this is where it starts.
-80X20 OS — Life Operating System for Hybrid Builders A single HTML file that runs your entire life. Built for the person who works a demanding job, trains seriously, and trains and builds AI on the side. No fluff. No SaaS. No monthly fee. Just open it in your browser. What's inside: Finance tracker toward a long-term target. Daily spend discipline. Sprint task management. Weekly training grid. Mindset activation protocols. 1h vibe coding tracker with streak. Country comparison. Confidence and stoic framework. Why it exists: Most productivity systems are built for people with one focus. This takes a holistic apporach. How to use it: Download. Open in browser. Enter your numbers. Everything saves locally. No login. No tracking. Philosophy: 80/20 everything. Ship daily. DCA always. Train without excuses.
+80X20 OS — Life Operating System for Hybrid Builders A single HTML file that runs your entire life.
+
+Built for the person who works a demanding job, trains seriously, and trains and builds AI on the side. 
+
+No fluff. No SaaS. No monthly fee. Just open it in your browser.
+
+What's inside: Finance tracker toward a long-term target. 
+
+Daily spend discipline. Sprint task management. Weekly training grid. 
+
+Mindset activation protocols. 1h vibe coding tracker with streak. 
+
+Confidence and stoic framework. Why it exists: Most productivity systems are built for people with one focus. 
+
+This takes a holistic apporach. How to use it: Download. Open in browser. Enter your numbers. 
+
+Everything saves locally. No login. No tracking. 
+
+Philosophy: 80/20 everything. Build daily. DCA always. Train without excuses.
