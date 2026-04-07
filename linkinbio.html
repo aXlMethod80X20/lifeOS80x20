@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>axlmethod80x20</title>
+<meta name="description" content="Hybrid builder. Mental models. Barbell everything.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #06060a;
+    --surface: #0c0c12;
+    --border: #1c1c30;
+    --border-light: #2a2a44;
+    --text: #ccccd4;
+    --text-bright: #eeeef2;
+    --text-dim: #55556a;
+    --gold: #c9a84c;
+    --gold-soft: rgba(201, 168, 76, 0.08);
+    --teal: #4cc9a8;
+  }
+
+  html, body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Grain overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .container {
+    width: 100%;
+    max-width: 420px;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* Avatar / monogram */
+  .avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 1px solid var(--border-light);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .avatar::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    background: linear-gradient(135deg, var(--gold), transparent 60%) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+  }
+
+  .avatar span {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+  }
+
+  /* Handle */
+  .handle {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-bright);
+    margin-bottom: 0.5rem;
+  }
+
+  .handle span { color: var(--gold); }
+
+  /* Tagline */
+  .tagline {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    text-align: center;
+    margin-bottom: 0.75rem;
+    max-width: 280px;
+    line-height: 1.6;
+  }
+
+  /* Pill tags */
+  .tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.25rem 0.75rem;
+  }
+
+  /* Links */
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .link-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .link-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .link-card.gold::before { background: linear-gradient(90deg, var(--gold), transparent); }
+  .link-card.teal::before { background: linear-gradient(90deg, var(--teal), transparent); }
+
+  .link-card:hover {
+    border-color: var(--border-light);
+    transform: translateY(-1px);
+    color: var(--text-bright);
+    text-decoration: none;
+  }
+
+  .link-card:hover::before { opacity: 1; }
+
+  .link-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1rem;
+  }
+
+  .link-icon.gold { background: var(--gold-soft); }
+  .link-icon.teal { background: rgba(76, 201, 168, 0.08); }
+
+  .link-text {
+    flex: 1;
+  }
+
+  .link-label {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    color: var(--text-bright);
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  .link-sub {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  .link-arrow {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    transition: transform 0.25s ease, color 0.25s ease;
+  }
+
+  .link-card:hover .link-arrow {
+    transform: translateX(3px);
+    color: var(--text);
+  }
+
+  /* Divider with label */
+  .divider {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0.5rem 0;
+  }
+
+  .divider hr {
+    flex: 1;
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+
+  .divider span {
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 2.5rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .container > * {
+    animation: fadeUp 0.6s ease forwards;
+    opacity: 0;
+  }
+
+  .container > *:nth-child(1) { animation-delay: 0.1s; }
+  .container > *:nth-child(2) { animation-delay: 0.2s; }
+  .container > *:nth-child(3) { animation-delay: 0.3s; }
+  .container > *:nth-child(4) { animation-delay: 0.35s; }
+  .container > *:nth-child(5) { animation-delay: 0.4s; }
+  .container > *:nth-child(6) { animation-delay: 0.5s; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="avatar">
+    <span>AX</span>
+  </div>
+
+  <div class="handle">axl<span>method</span>80x20</div>
+
+  <p class="tagline">Train your mind. Discipline your body. Optimize your risk.</p>
+
+  <div class="tags">
+    <span class="tag">Mental Models</span>
+    <span class="tag">Barbell</span>
+    <span class="tag">Hybrid Builder</span>
+  </div>
+
+  <div class="links">
+
+    <!-- lifeOS / Main project -->
+    <a class="link-card gold" href="https://axlmethod80x20.github.io/lifeOS80x20" target="_blank" rel="noopener">
+      <div class="link-icon gold">⬡</div>
+      <div class="link-text">
+        <span class="link-label">lifeOS80x20</span>
+        <span class="link-sub">Life operating system — free, open source</span>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+
+    <div class="divider">
+      <hr>
+      <span>Open Source</span>
+      <hr>
+    </div>
+
+    <!-- GitHub -->
+    <a class="link-card teal" href="https://github.com/axlmethod80x20" target="_blank" rel="noopener">
+      <div class="link-icon teal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill="#4cc9a8"/>
+        </svg>
+      </div>
+      <div class="link-text">
+        <span class="link-label">GitHub</span>
+        <span class="link-sub">axlmethod80x20 — source code &amp; repos</span>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+
+    <div class="divider">
+      <hr>
+      <span>Get the tool</span>
+      <hr>
+    </div>
+
+    <!-- Gumroad EN -->
+    <a class="link-card gold" href="https://80x20.gumroad.com/" target="_blank" rel="noopener">
+      <div class="link-icon gold">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10" stroke="#c9a84c" stroke-width="1.5"/>
+          <path d="M12 8v4l3 3" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="link-text">
+        <span class="link-label">Download — EN</span>
+        <span class="link-sub">lifeOS80x20 · English</span>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+
+    <!-- Gumroad FI -->
+    <a class="link-card gold" href="https://axlmethod.gumroad.com/" target="_blank" rel="noopener">
+      <div class="link-icon gold">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10" stroke="#c9a84c" stroke-width="1.5"/>
+          <path d="M12 8v4l3 3" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="link-text">
+        <span class="link-label">Lataa — FI</span>
+        <span class="link-sub">lifeOS80x20 · Suomi</span>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+
+  </div>
+
+  <p class="footer">80/20 everything &nbsp;·&nbsp; build daily &nbsp;·&nbsp; DCA always</p>
+
+</div>
+
+</body>
+</html>
