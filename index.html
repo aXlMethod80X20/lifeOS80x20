@@ -7,31 +7,31 @@
 <meta name="description" content="A life operating system for hybrid builders. Mental models, hybrid training, and antifragile investing.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg: #06060a;
-  --surface: #0c0c12;
-  --surface-2: #131320;
-  --border: #1c1c30;
-  --border-light: #2a2a44;
-  --text: #ccccd4;
-  --text-bright: #eeeef2;
-  --text-dim: #55556a;
-  --gold: #c9a84c;
-  --gold-soft: rgba(201, 168, 76, 0.12);
-  --teal: #4cc9a8;
-  --teal-soft: rgba(76, 201, 168, 0.10);
-  --red-soft: rgba(201, 76, 76, 0.10);
-  --red: #c97a4c;
+  --bg: #050507;
+  --surface: #0b0b12;
+  --surface-2: #101018;
+  --border: #1a1a2e;
+  --border-light: #262640;
+  --text: #c0c0cc;
+  --text-bright: #ebebf5;
+  --text-dim: #6a6a88;
+  --amber: #e8a000;
+  --amber-mid: rgba(232, 160, 0, 0.20);
+  --amber-soft: rgba(232, 160, 0, 0.08);
+  --teal: #00c8a0;
+  --teal-soft: rgba(0, 200, 160, 0.08);
+  --red: #e06050;
 }
 
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'DM Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   background: var(--bg);
   color: var(--text);
   font-size: 14px;
@@ -39,167 +39,320 @@ body {
   overflow-x: hidden;
 }
 
-/* Grain overlay */
+/* Noise grain */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 9999;
-  opacity: 0.025;
+  z-index: 9998;
+  opacity: 0.018;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-::selection { background: var(--gold); color: var(--bg); }
-
+::selection { background: var(--amber); color: var(--bg); }
 a { color: var(--teal); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* --- NAV --- */
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  padding: 1.2rem 2.5rem;
+/* ─── STATUS BAR ─── */
+.status-bar {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0.4rem 2.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(6, 6, 10, 0.85);
-  backdrop-filter: blur(20px);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.status-bar .status-left { display: flex; gap: 2rem; align-items: center; }
+.status-bar .status-right { display: flex; gap: 2rem; align-items: center; }
+.status-bar .pulse {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--teal);
+  animation: blink 2.4s ease-in-out infinite;
+}
+.status-bar .pulse.amber { background: var(--amber); }
+.status-bar span.highlight { color: var(--amber); }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky;
+  top: 28px;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1rem 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(5, 5, 7, 0.90);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--border);
 }
 
 nav .logo {
   font-family: 'Syne', sans-serif;
   font-weight: 800;
-  font-size: 0.85rem;
-  letter-spacing: 0.15em;
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-bright);
 }
 
-nav .logo span { color: var(--gold); }
+nav .logo span { color: var(--amber); }
 
 nav .nav-links {
   display: flex;
-  gap: 2rem;
+  gap: 2.5rem;
   list-style: none;
 }
 
 nav .nav-links a {
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-dim);
-  transition: color 0.3s;
-}
-
-nav .nav-links a:hover { color: var(--text-bright); text-decoration: none; }
-
-/* --- HERO --- */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 6rem 2rem 4rem;
+  transition: color 0.25s;
   position: relative;
 }
 
+nav .nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--amber);
+  transition: width 0.25s ease;
+}
+
+nav .nav-links a:hover { color: var(--text-bright); text-decoration: none; }
+nav .nav-links a:hover::after { width: 100%; }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  position: relative;
+  overflow: hidden;
+  padding: 5rem 2.5rem 4rem;
+}
+
+/* Dot grid background */
 .hero::before {
   content: '';
   position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(ellipse, rgba(201, 168, 76, 0.04) 0%, transparent 70%);
+  inset: 0;
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-size: 36px 36px;
+  opacity: 0.8;
   pointer-events: none;
 }
 
+/* Ambient glow */
+.hero-glow {
+  position: absolute;
+  top: 15%;
+  left: 30%;
+  width: 800px;
+  height: 600px;
+  background: radial-gradient(ellipse, rgba(232, 160, 0, 0.05) 0%, transparent 65%);
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 3rem;
+  align-self: center;
+}
+
 .hero-tag {
-  font-size: 0.65rem;
-  letter-spacing: 0.25em;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--text-dim);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   opacity: 0;
-  animation: fadeUp 0.8s ease forwards 0.2s;
+  animation: fadeIn 0.6s ease forwards 0.2s;
+}
+
+.hero-tag::before {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: var(--border-light);
+  flex-shrink: 0;
 }
 
 .hero h1 {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: clamp(3rem, 8vw, 7rem);
-  line-height: 0.95;
-  letter-spacing: -0.02em;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(5rem, 14vw, 13rem);
+  line-height: 0.9;
+  letter-spacing: 0.01em;
   color: var(--text-bright);
   margin-bottom: 0.5rem;
   opacity: 0;
-  animation: fadeUp 0.8s ease forwards 0.4s;
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.4s;
 }
 
-.hero h1 .accent { color: var(--gold); }
+.hero h1 .accent {
+  color: var(--amber);
+  display: block;
+}
 
 .hero-sub {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'EB Garamond', serif;
   font-style: italic;
-  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
   color: var(--text-dim);
-  margin-top: 1rem;
-  margin-bottom: 3rem;
-  max-width: 500px;
+  margin-top: 1.5rem;
+  max-width: 520px;
+  line-height: 1.5;
   opacity: 0;
-  animation: fadeUp 0.8s ease forwards 0.6s;
+  animation: fadeIn 0.8s ease forwards 0.8s;
 }
 
-/* Convex curve SVG */
-.convex-curve {
-  width: min(400px, 80vw);
-  height: 120px;
+/* Oscilloscope curve */
+.scope-wrap {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
   opacity: 0;
-  animation: fadeUp 0.8s ease forwards 0.8s;
-  margin-bottom: 3rem;
+  animation: fadeIn 0.6s ease forwards 1s;
 }
 
-.convex-curve path {
-  stroke: var(--gold);
-  stroke-width: 2;
-  fill: none;
-  stroke-dasharray: 500;
-  stroke-dashoffset: 500;
-  animation: drawLine 2s ease forwards 1.2s;
+.scope-svg {
+  width: 100%;
+  height: 320px;
 }
 
-.convex-curve .axis {
+.scope-svg .scope-axis {
   stroke: var(--border-light);
   stroke-width: 1;
 }
 
-.convex-curve text {
+.scope-svg text {
   fill: var(--text-dim);
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
 }
 
-.hero-philosophy {
+.scope-svg .curve-linear {
+  stroke: var(--border-light);
+  stroke-width: 1.5;
+  stroke-dasharray: 8 5;
+  fill: none;
+}
+
+.scope-svg .curve-convex {
+  stroke: var(--amber);
+  stroke-width: 2.5;
+  fill: none;
+  filter: drop-shadow(0 0 6px rgba(232, 160, 0, 0.35));
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawCurve 2.2s cubic-bezier(0.4, 0, 0.2, 1) forwards 1.4s;
+}
+
+.scope-svg .scope-label {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.scope-svg .scope-label.amber { fill: var(--amber); opacity: 0.7; }
+
+.scope-svg .scope-annotation {
+  fill: var(--text-dim);
+  font-size: 7px;
+  letter-spacing: 0.14em;
+  opacity: 0.7;
+}
+
+.scope-svg .scope-annotation.amber { fill: var(--amber); opacity: 0.6; }
+
+.scope-svg .cliff-label {
+  fill: var(--red);
+  font-size: 7px;
+  letter-spacing: 0.14em;
+  opacity: 0.6;
+}
+
+.scope-svg .curve-cliff {
+  stroke: var(--text-dim);
+  stroke-dasharray: 3 3;
+  opacity: 0.35;
+}
+
+.curve-legend {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 1.5rem auto 0;
   display: flex;
   gap: 3rem;
   opacity: 0;
-  animation: fadeUp 0.8s ease forwards 1s;
+  animation: fadeIn 0.6s ease forwards 1.4s;
 }
 
-.hero-philosophy .pill {
+.legend-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.legend-title {
+  display: block;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-bright);
+  margin-bottom: 0.25rem;
+}
+
+.legend-title.amber { color: var(--amber); }
+
+.legend-desc {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+.pill {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-dim);
 }
@@ -208,22 +361,23 @@ nav .nav-links a:hover { color: var(--text-bright); text-decoration: none; }
   width: 6px;
   height: 6px;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
-.pill .dot.gold { background: var(--gold); }
-.pill .dot.teal { background: var(--teal); }
+.dot.amber { background: var(--amber); }
+.dot.teal { background: var(--teal); }
 
-/* --- SECTIONS --- */
+/* ─── SECTION STRUCTURE ─── */
 section {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 6rem 2rem;
+  padding: 7rem 2.5rem;
 }
 
 .section-divider {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 2.5rem;
 }
 
 .section-divider hr {
@@ -231,57 +385,67 @@ section {
   border-top: 1px solid var(--border);
 }
 
-.section-label {
-  font-size: 0.6rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  margin-bottom: 1rem;
+.section-meta {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
 }
 
-.section-label::before {
-  content: '';
-  display: block;
-  width: 20px;
-  height: 1px;
-  background: var(--border-light);
+.section-tag {
+  font-size: 0.55rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  padding: 0.25rem 0.7rem;
+  border-radius: 2px;
+}
+
+.section-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--border-light);
+  user-select: none;
+  letter-spacing: 0.05em;
 }
 
 .section-title {
   font-family: 'Syne', sans-serif;
   font-weight: 700;
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-size: clamp(1.9rem, 4vw, 3rem);
   color: var(--text-bright);
-  line-height: 1.1;
-  margin-bottom: 1.5rem;
+  line-height: 1.08;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.02em;
 }
 
 .section-intro {
-  max-width: 600px;
+  max-width: 580px;
   color: var(--text-dim);
-  font-size: 0.85rem;
-  line-height: 1.8;
-  margin-bottom: 3rem;
+  font-size: 0.82rem;
+  line-height: 1.85;
+  margin-bottom: 3.5rem;
 }
 
-/* --- MENTAL MODELS --- */
+/* ─── MENTAL MODELS ─── */
 .models-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 3.5rem;
 }
 
 .model-card {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
   padding: 2rem;
   cursor: pointer;
-  transition: all 0.35s ease;
+  transition: background 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -293,40 +457,71 @@ section {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--teal), transparent);
+  background: linear-gradient(90deg, var(--teal), transparent 60%);
   opacity: 0;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.3s ease;
 }
 
 .model-card:hover {
-  border-color: var(--border-light);
-  transform: translateY(-2px);
+  background: var(--surface-2);
 }
 
 .model-card:hover::before { opacity: 1; }
 
-.model-card .card-num {
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  color: var(--text-dim);
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 1rem;
+}
+
+.card-num {
+  font-size: 0.55rem;
+  letter-spacing: 0.22em;
+  color: var(--text-dim);
+}
+
+.card-expand-icon {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border-light);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  font-size: 0.65rem;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.model-card:hover .card-expand-icon {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.model-card.expanded .card-expand-icon {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: var(--bg);
 }
 
 .model-card h3 {
   font-family: 'Syne', sans-serif;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--text-bright);
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.6rem;
+  letter-spacing: -0.01em;
 }
 
-.model-card p {
-  font-size: 0.8rem;
+.model-card > p {
+  font-size: 0.78rem;
   color: var(--text-dim);
   line-height: 1.7;
 }
 
-.model-card .expand-content {
+.expand-content {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.5s ease, margin-top 0.3s ease;
@@ -334,291 +529,367 @@ section {
 
 .model-card.expanded .expand-content {
   max-height: 300px;
-  margin-top: 1rem;
+  margin-top: 1.2rem;
 }
 
-.model-card .expand-content p {
-  padding-top: 1rem;
+.expand-content p {
+  padding-top: 1.2rem;
   border-top: 1px solid var(--border);
   font-size: 0.75rem;
   color: var(--text);
+  line-height: 1.8;
 }
 
+/* Quote block */
 .quote-block {
-  margin-top: 2rem;
-  padding: 2rem;
+  position: relative;
+  padding: 2.5rem 2.5rem 2.5rem 4.5rem;
   background: var(--surface);
-  border-left: 2px solid var(--gold);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
   border-radius: 0 8px 8px 0;
+  margin-top: 2rem;
+  overflow: hidden;
+}
+
+.quote-block::before {
+  content: '\201C';
+  position: absolute;
+  top: 0.5rem;
+  left: 1.2rem;
+  font-family: 'EB Garamond', serif;
+  font-size: 6rem;
+  line-height: 1;
+  color: var(--amber);
+  opacity: 0.25;
+  pointer-events: none;
+  user-select: none;
 }
 
 .quote-block blockquote {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'EB Garamond', serif;
   font-style: italic;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   color: var(--text-bright);
-  line-height: 1.6;
-  margin-bottom: 0.8rem;
+  line-height: 1.55;
+  margin-bottom: 1rem;
 }
 
 .quote-block cite {
-  font-family: 'DM Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-style: normal;
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--amber);
 }
 
-/* --- TRAINING --- */
+/* ─── TRAINING ─── */
 .training-week {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.75rem;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
   margin-bottom: 2rem;
 }
 
 .day-card {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1.2rem 0.8rem;
+  padding: 1.5rem 0.75rem;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: background 0.25s ease;
   position: relative;
+  cursor: default;
 }
 
-.day-card.rest {
-  opacity: 0.4;
+.day-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
 }
 
-.day-card.active {
-  border-color: var(--gold);
-  background: var(--gold-soft);
-}
+.day-card.strength-day::after { background: var(--amber); }
+.day-card.bjj-day::after { background: var(--teal); }
+.day-card.cardio-day::after { background: var(--red); }
+.day-card.rest-day { opacity: 0.45; }
 
-.day-card .day-name {
-  font-size: 0.6rem;
-  letter-spacing: 0.15em;
+.day-card.active { background: var(--surface-2); }
+.day-card.active::after { opacity: 1; }
+
+.day-card.today { box-shadow: inset 0 0 0 1px var(--text-dim); }
+
+.day-name {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--text-dim);
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.7rem;
 }
 
-.day-card .day-type {
+.day-type {
   font-family: 'Syne', sans-serif;
   font-weight: 700;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
   color: var(--text-bright);
-  margin-bottom: 0.8rem;
+  margin-bottom: 1rem;
   min-height: 2em;
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 1.3;
 }
 
-.day-card .day-type.strength { color: var(--gold); }
-.day-card .day-type.jiujitsu { color: var(--teal); }
-.day-card .day-type.cardio { color: var(--red); }
+.day-type.strength { color: var(--amber); }
+.day-type.jiujitsu { color: var(--teal); }
+.day-type.cardio { color: var(--red); }
 
-.day-card .check-btn {
+.check-btn {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 2px solid var(--border-light);
+  border: 1.5px solid var(--border-light);
   background: transparent;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   color: transparent;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
 }
 
-.day-card .check-btn:hover {
-  border-color: var(--gold);
-}
+.check-btn:hover { border-color: var(--amber); }
 
-.day-card .check-btn.checked {
-  background: var(--gold);
-  border-color: var(--gold);
+.check-btn.checked {
+  background: var(--amber);
+  border-color: var(--amber);
   color: var(--bg);
 }
 
+/* Training stats */
 .training-stats {
-  display: flex;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
   margin-bottom: 2rem;
 }
 
 .stat-block {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1.5rem 2rem;
-  flex: 1;
+  padding: 1.75rem 2rem;
 }
 
-.stat-block .stat-label {
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
+.stat-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--text-dim);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.6rem;
 }
 
-.stat-block .stat-value {
+.stat-value {
   font-family: 'Syne', sans-serif;
   font-weight: 800;
   font-size: 1.8rem;
   color: var(--text-bright);
+  line-height: 1.1;
+  display: block;
 }
 
-.stat-block .stat-value .unit {
-  font-size: 0.7rem;
+.stat-value .unit {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
   font-weight: 400;
   color: var(--text-dim);
-  margin-left: 0.3rem;
+  display: block;
+  margin-top: 0.25rem;
 }
 
 .training-note {
-  font-size: 0.75rem;
-  color: var(--text-dim);
+  font-family: 'EB Garamond', serif;
   font-style: italic;
-  font-family: 'Instrument Serif', serif;
+  font-size: 1rem;
+  color: var(--text-dim);
 }
 
-/* --- INVESTMENT --- */
+/* ─── INVESTMENT ─── */
 .barbell-visual {
-  display: flex;
-  align-items: center;
   margin-bottom: 3rem;
-  gap: 0;
-  height: 80px;
-}
-
-.barbell-safe {
-  flex: 0 0 80%;
-  background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface) 100%);
-  border: 1px solid var(--border);
-  border-radius: 8px 0 0 8px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 0.3rem;
   position: relative;
 }
 
-.barbell-safe .barbell-pct {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 1.6rem;
-  color: var(--text-dim);
-}
-
-.barbell-safe .barbell-label {
-  font-size: 0.6rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
-
-.barbell-aggressive {
-  flex: 0 0 20%;
-  background: var(--gold-soft);
-  border: 1px solid var(--gold);
-  border-radius: 0 8px 8px 0;
-  height: 100%;
+.barbell-label-row {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 0.3rem;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 0.6rem;
 }
 
-.barbell-aggressive .barbell-pct {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 1.6rem;
-  color: var(--gold);
+.barbell-pct-left {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.5rem;
+  line-height: 1;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
 }
 
-.barbell-aggressive .barbell-label {
+.barbell-pct-right {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.5rem;
+  line-height: 1;
+  color: var(--amber);
+  letter-spacing: 0.04em;
+}
+
+.barbell-track {
+  height: 6px;
+  background: var(--border);
+  border-radius: 100px;
+  overflow: hidden;
+  position: relative;
+}
+
+.barbell-fill-safe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  background: var(--border-light);
+  border-radius: 100px 0 0 100px;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.barbell-fill-convex {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 0;
+  background: var(--amber);
+  border-radius: 0 100px 100px 0;
+  box-shadow: 0 0 12px rgba(232, 160, 0, 0.4);
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+}
+
+.barbell-visual.animated .barbell-fill-safe { width: 80%; }
+.barbell-visual.animated .barbell-fill-convex { width: 20%; }
+
+.barbell-sub {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.6rem;
+}
+
+.barbell-sub span {
   font-size: 0.6rem;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--text-dim);
 }
+
+.barbell-sub span.accent { color: var(--amber); }
 
 .invest-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 2rem;
 }
 
 .invest-card {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 2rem;
+  padding: 2.5rem 2rem;
+  position: relative;
 }
+
+.invest-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.invest-card.linear::before { background: var(--border-light); }
+.invest-card.convex::before { background: var(--amber); }
 
 .invest-card h3 {
   font-family: 'Syne', sans-serif;
   font-weight: 700;
   font-size: 1rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.01em;
 }
 
 .invest-card.linear h3 { color: var(--text-dim); }
-.invest-card.convex h3 { color: var(--gold); }
+.invest-card.convex h3 { color: var(--amber); }
 
-.invest-card .curve-label {
+.curve-label {
   font-size: 0.6rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 }
 
 .invest-card.linear .curve-label { color: var(--text-dim); }
-.invest-card.convex .curve-label { color: var(--gold); }
+.invest-card.convex .curve-label { color: var(--amber); opacity: 0.7; }
+
+.invest-card p {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.75;
+  margin-bottom: 1.2rem;
+}
 
 .invest-card ul {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.45rem;
 }
 
 .invest-card li {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-dim);
-  padding-left: 1rem;
+  padding-left: 1.2rem;
   position: relative;
+  line-height: 1.5;
 }
 
 .invest-card li::before {
-  content: '—';
+  content: '–';
   position: absolute;
   left: 0;
   color: var(--border-light);
 }
 
-.invest-card p {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  line-height: 1.7;
-}
+.invest-card.convex li::before { color: var(--amber); opacity: 0.5; }
 
+/* Markowitz */
 .markowitz-block {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 2rem;
+  padding: 2.5rem 2rem;
 }
 
 .markowitz-block h3 {
@@ -626,13 +897,13 @@ section {
   font-weight: 700;
   font-size: 1rem;
   color: var(--teal);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
 .markowitz-block p {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--text-dim);
-  line-height: 1.7;
+  line-height: 1.75;
   margin-bottom: 1rem;
 }
 
@@ -640,9 +911,10 @@ section {
 
 .frontier-svg {
   width: 100%;
-  max-width: 500px;
+  max-width: 520px;
   height: 200px;
-  margin: 1.5rem 0;
+  margin: 2rem 0;
+  display: block;
 }
 
 .frontier-svg .frontier-line {
@@ -652,7 +924,7 @@ section {
 }
 
 .frontier-svg .frontier-fill {
-  fill: var(--teal-soft);
+  fill: rgba(0, 200, 160, 0.06);
 }
 
 .frontier-svg .axis-line {
@@ -662,62 +934,84 @@ section {
 
 .frontier-svg text {
   fill: var(--text-dim);
-  font-family: 'DM Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size: 9px;
+  letter-spacing: 0.08em;
 }
 
-.frontier-svg .dot-safe {
-  fill: var(--text-dim);
-}
-
-.frontier-svg .dot-optimal {
-  fill: var(--teal);
-}
-
-.frontier-svg .dot-aggressive {
-  fill: var(--gold);
-}
-
-/* --- FOOTER --- */
+/* ─── FOOTER ─── */
 footer {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 4rem 2rem;
+  padding: 4rem 2.5rem;
   border-top: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 2rem;
 }
 
-footer .footer-left {
-  font-size: 0.7rem;
-  color: var(--text-dim);
-  letter-spacing: 0.05em;
+.footer-left .footer-brand {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-bright);
+  margin-bottom: 0.4rem;
 }
 
-footer .footer-left span { color: var(--gold); }
+.footer-left .footer-brand span { color: var(--amber); }
 
-footer .footer-right {
+.footer-left .footer-sub {
   font-size: 0.65rem;
   color: var(--text-dim);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-/* --- ANIMATIONS --- */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
+.footer-right {
+  text-align: right;
+}
+
+.footer-right .footer-mantra {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  line-height: 2;
+}
+
+.footer-right a {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes drawLine {
+@keyframes drawCurve {
   to { stroke-dashoffset: 0; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
 }
 
 .reveal {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
 }
 
 .reveal.visible {
@@ -725,54 +1019,64 @@ footer .footer-right {
   transform: translateY(0);
 }
 
-/* Staggered children */
 .reveal-stagger > * {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(18px);
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.reveal-stagger.visible > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.08s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.16s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.24s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.32s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.visible > *:nth-child(6) { transition-delay: 0.40s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.visible > *:nth-child(7) { transition-delay: 0.48s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(1) { transition-delay: 0.00s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.07s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.14s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.21s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.28s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(6) { transition-delay: 0.35s; opacity: 1; transform: translateY(0); }
+.reveal-stagger.visible > *:nth-child(7) { transition-delay: 0.42s; opacity: 1; transform: translateY(0); }
 
-/* --- RESPONSIVE --- */
+/* ─── RESPONSIVE ─── */
 @media (max-width: 768px) {
-  nav { padding: 1rem 1.5rem; }
-  nav .nav-links { gap: 1rem; }
-  nav .nav-links a { font-size: 0.6rem; }
-  section { padding: 4rem 1.5rem; }
-  .hero-philosophy { flex-direction: column; gap: 1rem; align-items: center; }
-  .training-week {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  .training-stats { flex-direction: column; gap: 1rem; }
+  .status-bar { display: none; }
+  nav { top: 0; padding: 1rem 1.5rem; }
+  nav .nav-links { gap: 1.2rem; }
+  section { padding: 5rem 1.5rem; }
+  .hero { padding: 4rem 1.5rem 3rem; }
+
+  .training-week { grid-template-columns: repeat(4, 1fr); }
+  .training-stats { grid-template-columns: 1fr 1fr; }
   .invest-grid { grid-template-columns: 1fr; }
-  .barbell-visual { flex-direction: column; height: auto; }
-  .barbell-safe, .barbell-aggressive {
-    width: 100%;
-    height: 60px;
-    border-radius: 8px;
-    flex: none;
-  }
-  footer { flex-direction: column; gap: 1rem; text-align: center; }
+  .hero-pills { flex-direction: column; gap: 0.8rem; }
+
+  .barbell-label-row { flex-direction: column; gap: 0.2rem; }
+  .barbell-pct-left, .barbell-pct-right { font-size: 2.5rem; }
+
+  footer { flex-direction: column; }
+  .footer-right { text-align: left; }
+
+  .quote-block { padding: 2rem 1.5rem 2rem 3rem; }
+  .quote-block::before { font-size: 4rem; top: 0.2rem; left: 0.8rem; }
 }
 
 @media (max-width: 480px) {
-  .training-week {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .models-grid {
-    grid-template-columns: 1fr;
-  }
+  .training-week { grid-template-columns: repeat(2, 1fr); }
+  .training-stats { grid-template-columns: 1fr; }
+  .models-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div class="status-left">
+    <span class="pulse"></span>
+    <span>lifeOS<span class="highlight">80x20</span></span>
+    <span id="status-date">—</span>
+  </div>
+  <div class="status-right">
+    <span>BITS · ATOMS · CAPITAL</span>
+    <span class="pulse amber"></span>
+  </div>
+</div>
 
 <!-- NAV -->
 <nav>
@@ -786,24 +1090,52 @@ footer .footer-right {
 
 <!-- HERO -->
 <section class="hero">
-  <p class="hero-tag">Life Operating System for Hybrid Builders</p>
-  <h1>Convex<br><span class="accent">Operator</span></h1>
-  <p class="hero-sub">Train your mind, discipline your body, optimize your risk.</p>
+  <div class="hero-glow"></div>
 
-  <svg class="convex-curve" viewBox="0 0 400 120">
-    <line class="axis" x1="40" y1="100" x2="380" y2="100"/>
-    <line class="axis" x1="40" y1="10" x2="40" y2="100"/>
-    <text x="200" y="116">exposure</text>
-    <text x="8" y="58" transform="rotate(-90, 16, 58)">payoff</text>
-    <!-- Linear (boring) -->
-    <line class="axis" x1="40" y1="100" x2="360" y2="28" style="stroke-dasharray: 6 4;"/>
-    <!-- Convex (asymmetric upside) -->
-    <path d="M 40 98 Q 120 96 200 88 Q 280 72 330 40 Q 355 22 370 5"/>
-  </svg>
+  <div class="hero-inner">
+    <p class="hero-tag">Life Operating System for Hybrid Builders</p>
+    <h1>
+      Convex
+      <span class="accent">Operator</span>
+    </h1>
+    <p class="hero-sub">Train your mind, discipline your body, optimize your risk.</p>
+  </div>
 
-  <div class="hero-philosophy">
-    <div class="pill"><span class="dot teal"></span> Bits move fast — train your mind</div>
-    <div class="pill"><span class="dot gold"></span> Atoms move slow — train your body</div>
+  <div class="scope-wrap">
+    <svg class="scope-svg" viewBox="0 0 1000 320" preserveAspectRatio="none">
+      <!-- Axes -->
+      <line class="scope-axis" x1="30" y1="300" x2="980" y2="300"/>
+      <line class="scope-axis" x1="30" y1="10" x2="30" y2="300"/>
+      <!-- Axis labels -->
+      <text x="500" y="316" text-anchor="middle" class="scope-label">exposure</text>
+      <text x="14" y="155" text-anchor="middle" class="scope-label" transform="rotate(-90,14,155)">payoff</text>
+      <!-- Linear: rises then falls off a cliff -->
+      <line class="curve-linear" x1="30" y1="300" x2="800" y2="95"/>
+      <line class="curve-linear curve-cliff" x1="800" y1="95" x2="860" y2="310"/>
+      <!-- Convex curve: drawn by JS using exact y=x² points -->
+      <path class="curve-convex" id="convex-path" d=""/>
+      <!-- Annotations -->
+      <text x="46" y="292" class="scope-label scope-annotation">pay small premium</text>
+      <text x="820" y="50" class="scope-label scope-annotation amber">unlimited upside</text>
+      <text x="820" y="230" class="scope-label scope-annotation cliff-label">cliff</text>
+    </svg>
+  </div>
+
+  <div class="curve-legend">
+    <div class="legend-item">
+      <svg width="32" height="12" style="flex-shrink:0"><line x1="0" y1="6" x2="32" y2="6" stroke="var(--border-light)" stroke-width="1.5" stroke-dasharray="5 3"/></svg>
+      <div>
+        <span class="legend-title">Linear</span>
+        <span class="legend-desc">Predictable — until a rare event hits. Fragile by design. The cliff is always there.</span>
+      </div>
+    </div>
+    <div class="legend-item">
+      <svg width="32" height="12" style="flex-shrink:0"><line x1="0" y1="6" x2="32" y2="6" stroke="var(--amber)" stroke-width="2"/></svg>
+      <div>
+        <span class="legend-title amber">Convex</span>
+        <span class="legend-desc">Pay small premiums. Stay in the game. Let uncertainty compound in your favour — not against you.</span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -813,7 +1145,9 @@ footer .footer-right {
 <!-- MENTAL MODELS -->
 <section id="models">
   <div class="reveal">
-    <p class="section-label">Module 01 — Bits</p>
+    <div class="section-meta">
+      <span class="section-tag">Module 01 — Bits</span>
+    </div>
     <h2 class="section-title">The Latticework</h2>
     <p class="section-intro">
       Technology moves exponentially. Your mental operating system must keep pace.
@@ -824,7 +1158,10 @@ footer .footer-right {
 
   <div class="models-grid reveal-stagger">
     <div class="model-card" onclick="this.classList.toggle('expanded')">
-      <p class="card-num">01</p>
+      <div class="card-header">
+        <p class="card-num">[ 01 / 06 ]</p>
+        <span class="card-expand-icon">+</span>
+      </div>
       <h3>Inversion</h3>
       <p>Instead of asking how to succeed, ask how you would certainly fail — then avoid those things.</p>
       <div class="expand-content">
@@ -833,7 +1170,10 @@ footer .footer-right {
     </div>
 
     <div class="model-card" onclick="this.classList.toggle('expanded')">
-      <p class="card-num">02</p>
+      <div class="card-header">
+        <p class="card-num">[ 02 / 06 ]</p>
+        <span class="card-expand-icon">+</span>
+      </div>
       <h3>Second-Order Thinking</h3>
       <p>First-level thinking is fast and obvious. Second-level thinking asks: and then what?</p>
       <div class="expand-content">
@@ -842,7 +1182,10 @@ footer .footer-right {
     </div>
 
     <div class="model-card" onclick="this.classList.toggle('expanded')">
-      <p class="card-num">03</p>
+      <div class="card-header">
+        <p class="card-num">[ 03 / 06 ]</p>
+        <span class="card-expand-icon">+</span>
+      </div>
       <h3>Circle of Competence</h3>
       <p>Know the boundaries of what you truly understand. Operate inside. Expand deliberately.</p>
       <div class="expand-content">
@@ -851,7 +1194,10 @@ footer .footer-right {
     </div>
 
     <div class="model-card" onclick="this.classList.toggle('expanded')">
-      <p class="card-num">04</p>
+      <div class="card-header">
+        <p class="card-num">[ 04 / 06 ]</p>
+        <span class="card-expand-icon">+</span>
+      </div>
       <h3>Margin of Safety</h3>
       <p>Build redundancy into every system. Never operate at the edge of capacity.</p>
       <div class="expand-content">
@@ -860,7 +1206,10 @@ footer .footer-right {
     </div>
 
     <div class="model-card" onclick="this.classList.toggle('expanded')">
-      <p class="card-num">05</p>
+      <div class="card-header">
+        <p class="card-num">[ 05 / 06 ]</p>
+        <span class="card-expand-icon">+</span>
+      </div>
       <h3>Asymmetric Risk/Reward</h3>
       <p>Seek bets where the downside is capped but the upside is uncapped. This is convexity.</p>
       <div class="expand-content">
@@ -869,11 +1218,14 @@ footer .footer-right {
     </div>
 
     <div class="model-card" onclick="this.classList.toggle('expanded')">
-      <p class="card-num">06</p>
+      <div class="card-header">
+        <p class="card-num">[ 06 / 06 ]</p>
+        <span class="card-expand-icon">+</span>
+      </div>
       <h3>Deep Focus Protocol</h3>
       <p>Distraction is the tax on shallow thinking. Depth is the moat in an age of noise.</p>
       <div class="expand-content">
-        <p>Block 2-4 hour windows. Kill notifications. Single-task. The ability to sustain deep concentration on cognitively demanding work is becoming rare and therefore increasingly valuable. Protect this capacity like your most critical asset — because it is.</p>
+        <p>Block 2–4 hour windows. Kill notifications. Single-task. The ability to sustain deep concentration on cognitively demanding work is becoming rare and therefore increasingly valuable. Protect this capacity like your most critical asset — because it is.</p>
       </div>
     </div>
   </div>
@@ -890,7 +1242,9 @@ footer .footer-right {
 <!-- HYBRID TRAINING -->
 <section id="training">
   <div class="reveal">
-    <p class="section-label">Module 02 — Atoms</p>
+    <div class="section-meta">
+      <span class="section-tag">Module 02 — Atoms</span>
+    </div>
     <h2 class="section-title">Hybrid Training</h2>
     <p class="section-intro">
       The physical world doesn't move at software speed. Your body adapts slowly, demands consistency,
@@ -899,40 +1253,40 @@ footer .footer-right {
   </div>
 
   <div class="training-week reveal-stagger" id="training-grid">
-    <div class="day-card" data-day="0">
+    <div class="day-card strength-day" data-day="0">
       <p class="day-name">Mon</p>
       <p class="day-type strength">Strength</p>
-      <button class="check-btn" onclick="toggleDay(0)">&#10003;</button>
+      <button class="check-btn" onclick="toggleDay(0)">✓</button>
     </div>
-    <div class="day-card rest" data-day="1">
+    <div class="day-card rest-day" data-day="1">
       <p class="day-name">Tue</p>
       <p class="day-type">Recovery</p>
-      <button class="check-btn" onclick="toggleDay(1)">&#10003;</button>
+      <button class="check-btn" onclick="toggleDay(1)">✓</button>
     </div>
-    <div class="day-card" data-day="2">
+    <div class="day-card strength-day" data-day="2">
       <p class="day-name">Wed</p>
       <p class="day-type strength">Strength</p>
-      <button class="check-btn" onclick="toggleDay(2)">&#10003;</button>
+      <button class="check-btn" onclick="toggleDay(2)">✓</button>
     </div>
-    <div class="day-card rest" data-day="3">
+    <div class="day-card rest-day" data-day="3">
       <p class="day-name">Thu</p>
       <p class="day-type">Recovery</p>
-      <button class="check-btn" onclick="toggleDay(3)">&#10003;</button>
+      <button class="check-btn" onclick="toggleDay(3)">✓</button>
     </div>
-    <div class="day-card rest" data-day="4">
+    <div class="day-card rest-day" data-day="4">
       <p class="day-name">Fri</p>
       <p class="day-type">Recovery</p>
-      <button class="check-btn" onclick="toggleDay(4)">&#10003;</button>
+      <button class="check-btn" onclick="toggleDay(4)">✓</button>
     </div>
-    <div class="day-card" data-day="5">
+    <div class="day-card bjj-day" data-day="5">
       <p class="day-name">Sat</p>
       <p class="day-type jiujitsu">Jiu-Jitsu</p>
-      <button class="check-btn" onclick="toggleDay(5)">&#10003;</button>
+      <button class="check-btn" onclick="toggleDay(5)">✓</button>
     </div>
-    <div class="day-card" data-day="6">
+    <div class="day-card cardio-day" data-day="6">
       <p class="day-name">Sun</p>
       <p class="day-type cardio">Cardio</p>
-      <button class="check-btn" onclick="toggleDay(6)">&#10003;</button>
+      <button class="check-btn" onclick="toggleDay(6)">✓</button>
     </div>
   </div>
 
@@ -947,7 +1301,7 @@ footer .footer-right {
     </div>
     <div class="stat-block">
       <p class="stat-label">Protocol</p>
-      <p class="stat-value" style="font-size: 1rem; line-height: 1.4;">STR / STR / BJJ / Z2</p>
+      <p class="stat-value" style="font-size: 1rem; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.04em;">STR · STR · BJJ · Z2</p>
     </div>
   </div>
 
@@ -960,23 +1314,30 @@ footer .footer-right {
 <!-- INVESTMENT -->
 <section id="invest">
   <div class="reveal">
-    <p class="section-label">Module 03 — Capital</p>
+    <div class="section-meta">
+      <span class="section-tag">Module 03 — Capital</span>
+    </div>
     <h2 class="section-title">The Barbell Protocol</h2>
     <p class="section-intro">
-      Taleb's antifragile portfolio: be hyper-conservative with most of your capital,
+      Taleb's core insight: be hyper-conservative with most of your capital,
       and hyper-aggressive with a small portion. Nothing in the middle.
-      The middle is where fragility hides.
+      The middle is where fragility hides dressed as stability.
+      This is a mental framework — not financial advice.
     </p>
   </div>
 
-  <div class="barbell-visual reveal">
-    <div class="barbell-safe">
-      <span class="barbell-pct">80%</span>
-      <span class="barbell-label">Safe / Linear</span>
+  <div class="barbell-visual reveal" id="barbell">
+    <div class="barbell-label-row">
+      <span class="barbell-pct-left">80%</span>
+      <span class="barbell-pct-right">20%</span>
     </div>
-    <div class="barbell-aggressive">
-      <span class="barbell-pct">20%</span>
-      <span class="barbell-label">Convex</span>
+    <div class="barbell-track">
+      <div class="barbell-fill-safe"></div>
+      <div class="barbell-fill-convex"></div>
+    </div>
+    <div class="barbell-sub">
+      <span>Safe / Linear</span>
+      <span class="accent">Convex</span>
     </div>
   </div>
 
@@ -985,11 +1346,11 @@ footer .footer-right {
       <h3>Linear Investments</h3>
       <p class="curve-label">Predictable returns, capped upside</p>
       <p>These are the foundation. Boring by design. They preserve capital, generate steady compounding, and let you sleep at night. The 80% exists so the 20% can take real risk.</p>
-      <ul style="margin-top: 1rem;">
-        <li>Broad index funds (S&P 500, total market)</li>
-        <li>Government & investment-grade bonds</li>
-        <li>High-yield savings / money market</li>
-        <li>Dollar-cost averaging — always</li>
+      <ul>
+        <li>Broad passive index exposure</li>
+        <li>Sovereign & investment-grade fixed income</li>
+        <li>Cash equivalents with yield</li>
+        <li>Systematic, recurring contributions</li>
       </ul>
     </div>
 
@@ -997,11 +1358,11 @@ footer .footer-right {
       <h3>Convex Investments</h3>
       <p class="curve-label">Capped downside, uncapped upside</p>
       <p>This is where asymmetry lives. You can lose your stake but never more. The upside, however, has no ceiling. Structure small bets that benefit from volatility and disorder.</p>
-      <ul style="margin-top: 1rem;">
+      <ul>
+        <li>Skill acquisition with compounding returns</li>
+        <li>High-variance, limited-downside positions</li>
+        <li>Concentrated conviction bets (sized small)</li>
         <li>Asymmetric skill acquisition (coding, AI)</li>
-        <li>Early-stage / angel investments</li>
-        <li>Options strategies (defined risk)</li>
-        <li>Building equity in your own projects</li>
       </ul>
     </div>
   </div>
@@ -1015,29 +1376,20 @@ footer .footer-right {
     </p>
 
     <svg class="frontier-svg" viewBox="0 0 500 200">
-      <!-- Axes -->
       <line class="axis-line" x1="50" y1="170" x2="470" y2="170"/>
       <line class="axis-line" x1="50" y1="10" x2="50" y2="170"/>
-      <text x="250" y="195">Risk (Volatility) →</text>
-      <text x="10" y="95" transform="rotate(-90, 18, 95)">Return →</text>
-
-      <!-- Efficient frontier curve -->
-      <path class="frontier-fill" d="M 80 150 Q 140 60 250 40 Q 370 22 440 30 L 440 170 L 80 170 Z" opacity="0.3"/>
+      <text x="250" y="194" text-anchor="middle">Risk (Volatility) →</text>
+      <text x="12" y="95" text-anchor="middle" transform="rotate(-90,12,95)">Return →</text>
+      <path class="frontier-fill" d="M 80 150 Q 140 60 250 40 Q 370 22 440 30 L 440 170 L 80 170 Z"/>
       <path class="frontier-line" d="M 80 150 Q 140 60 250 40 Q 370 22 440 30"/>
-
-      <!-- Points -->
-      <circle class="dot-safe" cx="100" cy="138" r="6"/>
-      <text x="108" y="132" style="fill: var(--text-dim);">bonds</text>
-
-      <circle class="dot-optimal" cx="220" cy="46" r="7"/>
-      <text x="230" y="42" style="fill: var(--teal);">optimal</text>
-
-      <circle class="dot-aggressive" cx="400" cy="26" r="6"/>
-      <text x="370" y="18" style="fill: var(--gold);">convex bets</text>
-
-      <!-- Sub-optimal zone point -->
+      <circle fill="var(--text-dim)" cx="100" cy="138" r="5"/>
+      <text x="110" y="133" fill="var(--text-dim)">bonds</text>
+      <circle fill="var(--teal)" cx="220" cy="46" r="6"/>
+      <text x="230" y="42" fill="var(--teal)">optimal</text>
+      <circle fill="var(--amber)" cx="400" cy="26" r="5"/>
+      <text x="370" y="18" fill="var(--amber)">convex bets</text>
       <circle cx="280" cy="120" r="4" fill="var(--text-dim)" opacity="0.3"/>
-      <text x="290" y="124" style="fill: var(--text-dim); opacity: 0.4;">sub-optimal</text>
+      <text x="290" y="124" fill="var(--text-dim)" opacity="0.4">sub-optimal</text>
     </svg>
 
     <p>
@@ -1056,16 +1408,46 @@ footer .footer-right {
 <!-- FOOTER -->
 <footer>
   <div class="footer-left">
-    lifeOS<span>80x20</span> — Convex Operator<br>
-    No login. No tracking. No SaaS. Just open it.
+    <p class="footer-brand">lifeOS<span>80x20</span> — Convex Operator</p>
+    <p class="footer-sub">No login. No tracking. No SaaS. Just open it.</p>
   </div>
   <div class="footer-right">
-    80/20 everything. Build daily. Train without excuses.
+    <p class="footer-mantra">80/20 everything<br>Build daily<br>DCA always</p>
   </div>
 </footer>
 
 <script>
-// --- SCROLL REVEAL ---
+// ─── CONVEX CURVE (exact y = x²) ───
+(function() {
+  const path = document.getElementById('convex-path');
+  if (!path) return;
+  const x0 = 30, x1 = 980, y0 = 300, y1 = 10;
+  const pts = 60;
+  let d = '';
+  for (let i = 0; i <= pts; i++) {
+    const t = i / pts;                        // 0 → 1 along x-axis
+    const svgX = x0 + t * (x1 - x0);
+    const svgY = y0 - (t * t) * (y0 - y1);   // y = t², mapped to SVG coords
+    d += (i === 0 ? 'M' : 'L') + svgX.toFixed(1) + ' ' + svgY.toFixed(1) + ' ';
+  }
+  path.setAttribute('d', d.trim());
+
+  // Update dasharray to match actual path length
+  const len = path.getTotalLength();
+  path.style.strokeDasharray = len;
+  path.style.strokeDashoffset = len;
+})();
+
+// ─── STATUS BAR DATE ───
+(function() {
+  const el = document.getElementById('status-date');
+  const now = new Date();
+  const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  el.textContent = days[now.getDay()] + ' ' + String(now.getDate()).padStart(2,'0') + ' ' + months[now.getMonth()];
+})();
+
+// ─── SCROLL REVEAL ───
 const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -1073,11 +1455,23 @@ const observer = new IntersectionObserver((entries) => {
       entry.target.classList.add('visible');
     }
   });
-}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
 revealEls.forEach(el => observer.observe(el));
 
-// --- TRAINING TRACKER ---
+// ─── BARBELL ANIMATION ───
+const barbellObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('animated');
+    }
+  });
+}, { threshold: 0.4 });
+
+const barbellEl = document.getElementById('barbell');
+if (barbellEl) barbellObserver.observe(barbellEl);
+
+// ─── TRAINING TRACKER ───
 function getWeekKey() {
   const now = new Date();
   const start = new Date(now.getFullYear(), 0, 1);
@@ -1086,9 +1480,7 @@ function getWeekKey() {
 }
 
 function loadTraining() {
-  const key = getWeekKey();
-  const data = JSON.parse(localStorage.getItem(key) || '{}');
-  return data;
+  return JSON.parse(localStorage.getItem(getWeekKey()) || '{}');
 }
 
 function saveTraining(data) {
@@ -1105,7 +1497,6 @@ function toggleDay(dayIndex) {
 function renderTraining() {
   const data = loadTraining();
   const cards = document.querySelectorAll('.day-card');
-  let done = 0;
 
   cards.forEach(card => {
     const day = parseInt(card.dataset.day);
@@ -1113,29 +1504,24 @@ function renderTraining() {
     if (data[day]) {
       btn.classList.add('checked');
       card.classList.add('active');
-      // Count only training days (not rest)
-      if (!card.classList.contains('rest') || data[day]) done++;
     } else {
       btn.classList.remove('checked');
       card.classList.remove('active');
     }
   });
 
-  // Count checked training days
-  const trainingDays = [0, 2, 5, 6]; // Mon, Wed, Sat, Sun
+  const trainingDays = [0, 2, 5, 6];
   let trainDone = 0;
   trainingDays.forEach(d => { if (data[d]) trainDone++; });
   document.getElementById('week-done').textContent = trainDone;
 
-  // Streak (count consecutive completed weeks)
   let streak = 0;
   const now = new Date();
-  const currentYear = now.getFullYear();
-  const startOfYear = new Date(currentYear, 0, 1);
+  const startOfYear = new Date(now.getFullYear(), 0, 1);
   const currentWeek = Math.ceil(((now - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
 
   for (let w = currentWeek; w > 0; w--) {
-    const wKey = `training-${currentYear}-w${w}`;
+    const wKey = `training-${now.getFullYear()}-w${w}`;
     const wData = JSON.parse(localStorage.getItem(wKey) || '{}');
     const wDone = trainingDays.filter(d => wData[d]).length;
     if (wDone >= 3) {
@@ -1148,14 +1534,10 @@ function renderTraining() {
   document.getElementById('streak-count').textContent = streak;
 }
 
-// Highlight today
 function highlightToday() {
-  const dayMap = [0, 1, 2, 3, 4, 5, 6]; // Mon=0 in our grid
-  const today = (new Date().getDay() + 6) % 7; // Convert Sunday=0 to Monday=0
+  const today = (new Date().getDay() + 6) % 7;
   const cards = document.querySelectorAll('.day-card');
-  if (cards[today]) {
-    cards[today].style.boxShadow = 'inset 0 0 0 1px var(--text-dim)';
-  }
+  if (cards[today]) cards[today].classList.add('today');
 }
 
 renderTraining();
