@@ -7,28 +7,28 @@
 <meta name="description" content="Hybrid builder. Mental models. Barbell everything.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --bg: #06060a;
-    --surface: #0c0c12;
-    --border: #1c1c30;
-    --border-light: #2a2a44;
-    --text: #ccccd4;
-    --text-bright: #eeeef2;
-    --text-dim: #55556a;
-    --gold: #c9a84c;
-    --gold-soft: rgba(201, 168, 76, 0.08);
-    --teal: #4cc9a8;
+    --bg: #050507;
+    --surface: #0b0b12;
+    --border: #1a1a2e;
+    --border-light: #262640;
+    --text: #c0c0cc;
+    --text-bright: #ebebf5;
+    --text-dim: #6a6a88;
+    --amber: #e8a000;
+    --amber-soft: rgba(232, 160, 0, 0.08);
+    --teal: #00c8a0;
   }
 
   html, body {
     min-height: 100vh;
     background: var(--bg);
     color: var(--text);
-    font-family: 'DM Mono', monospace;
+    font-family: 'IBM Plex Mono', monospace;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -75,7 +75,7 @@
     inset: -3px;
     border-radius: 50%;
     border: 1px solid transparent;
-    background: linear-gradient(135deg, var(--gold), transparent 60%) border-box;
+    background: linear-gradient(135deg, var(--amber), transparent 60%) border-box;
     -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: destination-out;
     mask-composite: exclude;
@@ -85,7 +85,7 @@
     font-family: 'Syne', sans-serif;
     font-weight: 800;
     font-size: 1.1rem;
-    color: var(--gold);
+    color: var(--amber);
     letter-spacing: 0.05em;
   }
 
@@ -100,11 +100,11 @@
     margin-bottom: 0.5rem;
   }
 
-  .handle span { color: var(--gold); }
+  .handle span { color: var(--amber); }
 
   /* Tagline */
   .tagline {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'EB Garamond', serif;
     font-style: italic;
     font-size: 0.85rem;
     color: var(--text-dim);
@@ -167,7 +167,7 @@
     transition: opacity 0.25s ease;
   }
 
-  .link-card.gold::before { background: linear-gradient(90deg, var(--gold), transparent); }
+  .link-card.amber::before { background: linear-gradient(90deg, var(--amber), transparent); }
   .link-card.teal::before { background: linear-gradient(90deg, var(--teal), transparent); }
 
   .link-card:hover {
@@ -190,7 +190,7 @@
     font-size: 1rem;
   }
 
-  .link-icon.gold { background: var(--gold-soft); }
+  .link-icon.amber { background: var(--amber-soft); }
   .link-icon.teal { background: rgba(76, 201, 168, 0.08); }
 
   .link-text {
@@ -295,8 +295,8 @@
   <div class="links">
 
     <!-- lifeOS / Main project -->
-    <a class="link-card gold" href="https://axlmethod80x20.github.io/lifeOS80x20" target="_blank" rel="noopener">
-      <div class="link-icon gold">⬡</div>
+    <a class="link-card amber" href="https://axlmethod80x20.github.io/lifeOS80x20" target="_blank" rel="noopener">
+      <div class="link-icon amber">⬡</div>
       <div class="link-text">
         <span class="link-label">lifeOS80x20</span>
         <span class="link-sub">Life operating system — free, open source</span>
@@ -331,11 +331,11 @@
     </div>
 
     <!-- Gumroad EN -->
-    <a class="link-card gold" href="https://80x20.gumroad.com/" target="_blank" rel="noopener">
-      <div class="link-icon gold">
+    <a class="link-card amber" href="https://80x20.gumroad.com/" target="_blank" rel="noopener">
+      <div class="link-icon amber">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="10" stroke="#c9a84c" stroke-width="1.5"/>
-          <path d="M12 8v4l3 3" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="10" stroke="#e8a000" stroke-width="1.5"/>
+          <path d="M12 8v4l3 3" stroke="#e8a000" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </div>
       <div class="link-text">
@@ -346,11 +346,11 @@
     </a>
 
     <!-- Gumroad FI -->
-    <a class="link-card gold" href="https://axlmethod.gumroad.com/" target="_blank" rel="noopener">
-      <div class="link-icon gold">
+    <a class="link-card amber" href="https://axlmethod.gumroad.com/" target="_blank" rel="noopener">
+      <div class="link-icon amber">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="10" stroke="#c9a84c" stroke-width="1.5"/>
-          <path d="M12 8v4l3 3" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="10" stroke="#e8a000" stroke-width="1.5"/>
+          <path d="M12 8v4l3 3" stroke="#e8a000" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </div>
       <div class="link-text">
