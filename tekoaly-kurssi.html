@@ -461,6 +461,160 @@ body::after {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ── DASHBOARD ── */
+.dashboard {
+  margin-bottom: 0;
+  padding-bottom: 3rem;
+  animation: fadeUp 0.6s ease both;
+}
+.dash-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.dash-status { display: flex; align-items: center; gap: 0.4rem; }
+.dash-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 8px var(--teal);
+  animation: dot-blink 2.4s ease-in-out infinite;
+}
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+@media(max-width: 540px) { .dash-grid { grid-template-columns: 1fr; } }
+.dash-card {
+  background: var(--surface);
+  border: 1px solid var(--border-mid);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.dash-card:hover { background: var(--surface-2); }
+.dash-card-top {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.dash-icon { font-size: 1.3rem; flex-shrink: 0; }
+.dash-info { flex: 1; min-width: 0; }
+.dash-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: var(--text-bright);
+  margin-bottom: 0.2rem;
+}
+.dash-metric {
+  font-size: 0.58rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+.dash-ring-wrap {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dash-ring { width: 44px; height: 44px; transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: var(--border-mid); stroke-width: 3; }
+.ring-fill { fill: none; stroke-width: 3; stroke-linecap: round; transition: stroke-dasharray 1s ease; }
+.amber-ring { stroke: var(--amber); }
+.teal-ring { stroke: var(--teal); }
+.ring-pct {
+  position: absolute;
+  font-size: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.amber-text { color: var(--amber); }
+.teal-text { color: var(--teal); }
+.dash-detail {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+.dash-week {
+  display: flex;
+  gap: 0.3rem;
+  margin-bottom: 0.6rem;
+}
+.day {
+  font-size: 0.5rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.35rem;
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+.day.done { background: var(--amber-soft); color: var(--amber); border-color: rgba(232,160,0,0.2); }
+.dash-habits { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.6rem; }
+.habit {
+  font-size: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 100px;
+  background: var(--surface-2);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+.habit.done { background: var(--teal-soft); color: var(--teal); border-color: rgba(0,200,160,0.2); }
+.dash-sub { font-size: 0.55rem; color: var(--text-faint); letter-spacing: 0.05em; }
+.dash-bar-wrap { margin-bottom: 0.6rem; }
+.dash-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.52rem;
+  color: var(--text-dim);
+  margin-bottom: 0.4rem;
+}
+.dash-bar {
+  height: 4px;
+  background: var(--border-mid);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.dash-bar-fill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 1.2s ease;
+}
+.amber-fill { background: var(--amber); }
+.teal-fill { background: var(--teal); }
+
+/* TRANSITION */
+.dash-transition {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 0 3rem;
+  padding-top: 1rem;
+}
+.dash-transition-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-mid), transparent);
+}
+.dash-transition-label {
+  font-size: 0.52rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
 .module:nth-child(1) { animation-delay: 0.1s; }
 .module:nth-child(2) { animation-delay: 0.2s; }
 .module:nth-child(3) { animation-delay: 0.3s; }
@@ -477,6 +631,129 @@ body::after {
 </head>
 <body>
 <div class="wrapper">
+
+  <!-- LIFE DASHBOARD -->
+  <div class="dashboard">
+    <div class="dash-header">
+      <span class="dash-label">// elämän OS</span>
+      <span class="dash-status"><span class="dash-dot"></span>live</span>
+    </div>
+
+    <div class="dash-grid">
+
+      <div class="dash-card" onclick="togglePillar(this)">
+        <div class="dash-card-top">
+          <div class="dash-icon">💪</div>
+          <div class="dash-info">
+            <div class="dash-name">Keho</div>
+            <div class="dash-metric" id="fitness-metric">4 / 5 treeniä</div>
+          </div>
+          <div class="dash-ring-wrap">
+            <svg class="dash-ring" viewBox="0 0 44 44">
+              <circle cx="22" cy="22" r="18" class="ring-bg"/>
+              <circle cx="22" cy="22" r="18" class="ring-fill amber-ring" style="stroke-dasharray: calc(80 * 113.1 / 100) 113.1"/>
+            </svg>
+            <span class="ring-pct amber-text">80%</span>
+          </div>
+        </div>
+        <div class="dash-detail">
+          <div class="dash-week">
+            <span class="day done">Ma</span>
+            <span class="day done">Ti</span>
+            <span class="day done">Ke</span>
+            <span class="day">To</span>
+            <span class="day done">Pe</span>
+            <span class="day">La</span>
+            <span class="day">Su</span>
+          </div>
+          <div class="dash-sub">Voima · Jiu-jitsu · Cardio · Recovery</div>
+        </div>
+      </div>
+
+      <div class="dash-card" onclick="togglePillar(this)">
+        <div class="dash-card-top">
+          <div class="dash-icon">🧬</div>
+          <div class="dash-info">
+            <div class="dash-name">Pitkäikäisyys</div>
+            <div class="dash-metric" id="longevity-metric">7.5h uni · HRV 68</div>
+          </div>
+          <div class="dash-ring-wrap">
+            <svg class="dash-ring" viewBox="0 0 44 44">
+              <circle cx="22" cy="22" r="18" class="ring-bg"/>
+              <circle cx="22" cy="22" r="18" class="ring-fill teal-ring" style="stroke-dasharray: calc(75 * 113.1 / 100) 113.1"/>
+            </svg>
+            <span class="ring-pct teal-text">75%</span>
+          </div>
+        </div>
+        <div class="dash-detail">
+          <div class="dash-habits">
+            <span class="habit done">Uni 7h+</span>
+            <span class="habit done">Aurinko</span>
+            <span class="habit done">Kylmä</span>
+            <span class="habit">Paasto</span>
+            <span class="habit done">Ei alkoholia</span>
+          </div>
+          <div class="dash-sub">Tänään: 4/5 tavoaa saavutettu</div>
+        </div>
+      </div>
+
+      <div class="dash-card" onclick="togglePillar(this)">
+        <div class="dash-card-top">
+          <div class="dash-icon">📈</div>
+          <div class="dash-info">
+            <div class="dash-name">Varallisuus</div>
+            <div class="dash-metric" id="wealth-metric">€50K · S&P + BTC</div>
+          </div>
+          <div class="dash-ring-wrap">
+            <svg class="dash-ring" viewBox="0 0 44 44">
+              <circle cx="22" cy="22" r="18" class="ring-bg"/>
+              <circle cx="22" cy="22" r="18" class="ring-fill amber-ring" style="stroke-dasharray: calc(42 * 113.1 / 100) 113.1"/>
+            </svg>
+            <span class="ring-pct amber-text">42%</span>
+          </div>
+        </div>
+        <div class="dash-detail">
+          <div class="dash-bar-wrap">
+            <div class="dash-bar-label"><span>€0</span><span class="amber-text">€50K → €120K tavoite</span></div>
+            <div class="dash-bar"><div class="dash-bar-fill amber-fill" style="width:42%"></div></div>
+          </div>
+          <div class="dash-sub">80% indeksirahastot · 20% konveksit vedot</div>
+        </div>
+      </div>
+
+      <div class="dash-card" onclick="togglePillar(this)">
+        <div class="dash-card-top">
+          <div class="dash-icon">🚀</div>
+          <div class="dash-info">
+            <div class="dash-name">Vapaus</div>
+            <div class="dash-metric" id="freedom-metric">MRR €0 → €12K</div>
+          </div>
+          <div class="dash-ring-wrap">
+            <svg class="dash-ring" viewBox="0 0 44 44">
+              <circle cx="22" cy="22" r="18" class="ring-bg"/>
+              <circle cx="22" cy="22" r="18" class="ring-fill teal-ring" style="stroke-dasharray: calc(5 * 113.1 / 100) 113.1"/>
+            </svg>
+            <span class="ring-pct teal-text">5%</span>
+          </div>
+        </div>
+        <div class="dash-detail">
+          <div class="dash-bar-wrap">
+            <div class="dash-bar-label"><span>€0 MRR</span><span class="teal-text">Tavoite: €12K → exit</span></div>
+            <div class="dash-bar"><div class="dash-bar-fill teal-fill" style="width:5%"></div></div>
+          </div>
+          <div class="dash-sub">Sisältö → yhteisö → €97/kk → vapaus</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SMOOTH TRANSITION -->
+  <div class="dash-transition">
+    <div class="dash-transition-line"></div>
+    <span class="dash-transition-label">// tekoälykurssi alla</span>
+    <div class="dash-transition-line"></div>
+  </div>
 
   <!-- HERO -->
   <div class="hero">
@@ -550,7 +827,7 @@ body::after {
       </ul>
 
       <div class="truth">
-        <strong>// axlin näkökulma pankkimaailmasta</strong>
+        <strong>// totuus</strong>
         Isot organisaatiot implementoivat tekoälyä hitaasti. Regulaatio, legacy-järjestelmät, byrokraatia. Tämä tarkoittaa että sinulla on 12-18 kuukautta etulyöntiasemaa jos aloitat nyt. Ikkunat sulkeutuvat.
       </div>
     </div>
@@ -765,6 +1042,15 @@ body::after {
 function toggleModule(el) {
   el.classList.toggle('open');
 }
+function togglePillar(card) {
+  const detail = card.querySelector('.dash-detail');
+  if (!detail) return;
+  detail.style.display = detail.style.display === 'block' ? 'none' : 'block';
+}
+// Hide details by default on mobile, show on desktop
+document.querySelectorAll('.dash-detail').forEach(d => {
+  d.style.display = window.innerWidth > 540 ? 'block' : 'none';
+});
 </script>
 </body>
 </html>
