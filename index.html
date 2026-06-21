@@ -1061,6 +1061,106 @@ footer {
   .training-stats { grid-template-columns: 1fr; }
   .models-grid { grid-template-columns: 1fr; }
 }
+
+/* ─── AI COURSE SECTIONS ─── */
+.ai-module {
+  background: var(--surface);
+  border: 1px solid #1f1f35;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+.ai-module-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  user-select: none;
+}
+.ai-module-header:hover { background: var(--surface-2); }
+.ai-module-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  color: var(--amber);
+  min-width: 2rem;
+  opacity: 0.5;
+}
+.ai-module-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-bright);
+  flex: 1;
+}
+.ai-module-tag {
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--teal);
+  background: rgba(0,200,160,0.08);
+  border: 1px solid rgba(0,200,160,0.15);
+  border-radius: 100px;
+  padding: 0.2rem 0.6rem;
+}
+.ai-module-arrow { color: var(--text-dim); transition: transform 0.3s; }
+.ai-module.open .ai-module-arrow { transform: rotate(180deg); }
+.ai-module-body {
+  display: none;
+  padding: 0 1.5rem 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.78rem;
+  line-height: 1.9;
+}
+.ai-module.open .ai-module-body { display: block; }
+.ai-module-body p { margin-bottom: 1rem; color: var(--text); }
+.ai-key {
+  background: rgba(232,160,0,0.06);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 6px 6px 0;
+  padding: 0.9rem 1.1rem;
+  margin: 1rem 0;
+  font-size: 0.72rem;
+  line-height: 1.8;
+  color: var(--text-bright);
+}
+.ai-key strong { color: var(--amber); display: block; margin-bottom: 0.3rem; font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; }
+.ai-truth {
+  background: rgba(0,200,160,0.06);
+  border-left: 3px solid var(--teal);
+  border-radius: 0 6px 6px 0;
+  padding: 0.9rem 1.1rem;
+  margin: 1rem 0;
+  font-size: 0.72rem;
+  line-height: 1.8;
+  color: var(--text-bright);
+}
+.ai-truth strong { color: var(--teal); display: block; margin-bottom: 0.3rem; font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; }
+.ai-arch {
+  background: var(--surface-2);
+  border: 1px solid #1f1f35;
+  border-radius: 8px;
+  padding: 1.2rem;
+  margin: 1rem 0;
+  font-size: 0.63rem;
+  line-height: 1.9;
+  color: var(--text-dim);
+  overflow-x: auto;
+  white-space: pre;
+}
+.ai-list { list-style: none; margin: 0.8rem 0; }
+.ai-list li { display: flex; gap: 0.8rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.72rem; }
+.ai-list li:last-child { border-bottom: none; }
+.ai-list li::before { content: '→'; color: var(--amber); flex-shrink: 0; }
+.ai-compare { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.65rem; }
+.ai-compare th { text-align: left; padding: 0.6rem 0.8rem; background: var(--surface-2); color: var(--text-dim); font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; border-bottom: 1px solid #1f1f35; }
+.ai-compare td { padding: 0.7rem 0.8rem; border-bottom: 1px solid var(--border); color: var(--text); line-height: 1.5; }
+.ai-compare tr:last-child td { border-bottom: none; }
+.clr-amber { color: var(--amber); }
+.clr-teal { color: var(--teal); }
+.clr-bright { color: var(--text-bright); }
+
 </style>
 </head>
 <body>
@@ -1073,7 +1173,7 @@ footer {
     <span id="status-date">—</span>
   </div>
   <div class="status-right">
-    <span>BITS · ATOMS · CAPITAL</span>
+    <span>BITS · ATOMS · CAPITAL · TEKOÄLY</span>
     <span class="pulse amber"></span>
   </div>
 </div>
@@ -1085,6 +1185,7 @@ footer {
     <li><a href="#models">Mental Models</a></li>
     <li><a href="#training">Training</a></li>
     <li><a href="#invest">Investing</a></li>
+    <li><a href="#ai">Tekoäly 🇫🇮</a></li>
   </ul>
 </nav>
 
@@ -1405,6 +1506,197 @@ footer {
   </div>
 </section>
 
+
+<div class="section-divider"><hr></div>
+
+<!-- AI COURSE -->
+<section id="ai" style="padding: 5rem 2.5rem;">
+  <div class="container" style="max-width:780px;margin:0 auto;">
+
+    <div class="section-meta reveal">
+      <span class="section-tag">Module 04 — Tekoäly 🇫🇮</span>
+    </div>
+    <h2 class="section-title reveal">Pääse 99% edelle tekoälyssä</h2>
+    <p class="section-intro reveal">Perusteet, agentit ja multi-agent arkkitehtuuri — suomeksi, ilman hypeä.</p>
+
+    <!-- M1 -->
+    <div class="ai-module open reveal" onclick="this.classList.toggle('open')">
+      <div class="ai-module-header">
+        <span class="ai-module-num">01</span>
+        <span class="ai-module-title">Mitä tekoäly oikeasti on</span>
+        <span class="ai-module-tag">Perusteet</span>
+        <span class="ai-module-arrow">▼</span>
+      </div>
+      <div class="ai-module-body">
+        <p>Tekoäly ei ole taikuutta — se on matematiikkaa. Kun ymmärrät mitä konepellin alla tapahtuu, pelko katoaa ja kilpailuetu syntyy.</p>
+        <div class="ai-key">
+          <strong>// kolme termiä jotka pitää tietää</strong>
+          <strong>AI (Tekoäly)</strong> — Laaja käsite. Kaikki järjestelmät jotka jäljittelevät ihmisen älykkyyttä.<br><br>
+          <strong>ML (Koneoppiminen)</strong> — Tapa rakentaa AI. Annetaan dataa, malli oppii kaavoja. Ei sääntöjä — opitaan esimerkeistä.<br><br>
+          <strong>GenAI (Generatiivinen AI)</strong> — ML:n alajoukko. Mallit jotka <em>tuottavat</em> sisältöä: tekstiä, koodia, kuvia. Claude ja GPT ovat tätä.
+        </div>
+        <div class="ai-truth">
+          <strong>// totuus jota harva sanoo ääneen</strong>
+          Tekoäly on erittäin kehittynyttä hahmontunnistusta ja tilastollista ennustamista. Se ei "ajattele" eikä "ymmärrä" — se löytää kaavoja datasta hämmästyttävällä tarkkuudella. Tämä tekee siitä <em>ennustettavampaa</em> kun tiedät miten se toimii.
+        </div>
+      </div>
+    </div>
+
+    <!-- M2 -->
+    <div class="ai-module reveal" onclick="this.classList.toggle('open')">
+      <div class="ai-module-header">
+        <span class="ai-module-num">02</span>
+        <span class="ai-module-title">Miksi sinua ei korvata — mutta joku muu voi</span>
+        <span class="ai-module-tag">Kilpailuetu</span>
+        <span class="ai-module-arrow">▼</span>
+      </div>
+      <div class="ai-module-body">
+        <p>"Tekoäly ei korvaa sinua. Tekoälyä käyttävä ihminen korvaa sinut." — Se on totta, mutta useimmat eivät ymmärrä mitä se tarkoittaa käytännössä.</p>
+        <div class="ai-key">
+          <strong>// mitä "tekoälyä käyttävä" oikeasti tarkoittaa</strong>
+          Ei tarkoita sitä että osaat kirjoittaa promptin ChatGPT:hen. Sen osaa jo kaikki.<br><br>
+          Tarkoittaa: tiedät <em>milloin</em> käyttää, <em>miten</em> kehystää ongelma mallille ja <em>miten arvioida</em> output kriittisesti.
+        </div>
+        <ul class="ai-list">
+          <li>Rutiinitehtävät katoavat ensin: tiedonhaku, perussisältö, koodibugit</li>
+          <li>Arvontuotto siirtyy: kriittinen ajattelu, konteksti, päätöksenteko</li>
+          <li>Sama työ tunnissa vs. viikossa — kenet valitaan?</li>
+          <li>Isot organisaatiot ovat hitaita — sinulla on 12–18kk etulyöntiasema nyt</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- M3 -->
+    <div class="ai-module reveal" onclick="this.classList.toggle('open')">
+      <div class="ai-module-header">
+        <span class="ai-module-num">03</span>
+        <span class="ai-module-title">GPT vs Claude vs muut — kumpi milloin</span>
+        <span class="ai-module-tag">Työkalut</span>
+        <span class="ai-module-arrow">▼</span>
+      </div>
+      <div class="ai-module-body">
+        <table class="ai-compare">
+          <thead><tr><th>Malli</th><th>Vahvuus</th><th>Käytä kun</th><th>Hinta</th></tr></thead>
+          <tbody>
+            <tr><td class="clr-amber">Claude Sonnet 4.6</td><td>Pitkät kontekstit, koodaus, reasoning</td><td>Syvällinen analyysi, monimutkaiset tehtävät</td><td class="clr-teal">$20/kk</td></tr>
+            <tr><td class="clr-amber">Claude Haiku 4.5</td><td>Nopeus, hinta</td><td>Massatuotanto, API-integraatiot</td><td class="clr-teal">Halpa API</td></tr>
+            <tr><td>GPT-4o</td><td>Kuvien analysointi</td><td>Kuva-analyysi, OpenAI-ekosysteemi</td><td style="color:var(--text-dim)">$20/kk</td></tr>
+            <tr><td>Gemini 2.5 Pro</td><td>Pitkä konteksti, Google-integraatio</td><td>Dokumentit, YouTube, Workspace</td><td style="color:var(--text-dim)">Ilmainen/Pro</td></tr>
+            <tr><td>Llama 3 (lokaali)</td><td>Yksityisyys, offline</td><td>Arkaluontoinen data, ei kuluja</td><td class="clr-teal">Ilmainen</td></tr>
+          </tbody>
+        </table>
+        <div class="ai-key">
+          <strong>// axlin stack 2026</strong>
+          Claude Code CLI päivittäiseen koodaukseen. Claude.ai chatissa. Gemini dokumentteihin. Lokaali malli arkaluonteiseen dataan. Käytä oikeaa työkalua oikeaan tehtävään.
+        </div>
+      </div>
+    </div>
+
+    <!-- M4 -->
+    <div class="ai-module reveal" onclick="this.classList.toggle('open')">
+      <div class="ai-module-header">
+        <span class="ai-module-num">04</span>
+        <span class="ai-module-title">Agentit — tekoäly joka tekee eikä vain vastaa</span>
+        <span class="ai-module-tag">Agentit</span>
+        <span class="ai-module-arrow">▼</span>
+      </div>
+      <div class="ai-module-body">
+        <p>Chatbotti vastaa. Agentti <em>toimii</em> — suunnittelee, tekee päätöksiä, käyttää työkaluja, tarkistaa tuloksia.</p>
+        <div class="ai-key">
+          <strong>// agentti vs chatbotti</strong>
+          <strong>Chatbotti:</strong> "Kirjoita sähköposti." → Saat sähköpostin. Valmis.<br><br>
+          <strong>Agentti:</strong> "Hoida asiakasviestintä tänään." → Lukee sähköpostit, priorisoi, kirjoittaa vastaukset, lähettää, raportoi. Itse.
+        </div>
+        <ul class="ai-list">
+          <li><strong class="clr-amber">LLM (Aivot)</strong> — päättelee, suunnittelee, generoi</li>
+          <li><strong class="clr-amber">Työkalut (Kädet)</strong> — web-haku, koodin ajo, tiedostot, API:t</li>
+          <li><strong class="clr-amber">Muisti (Konteksti)</strong> — mitä on tehty, mitä tiedetään</li>
+          <li><strong class="clr-amber">Tavoite (Kompassi)</strong> — mitä ollaan saavuttamassa</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- M5 -->
+    <div class="ai-module reveal" onclick="this.classList.toggle('open')">
+      <div class="ai-module-header">
+        <span class="ai-module-num">05</span>
+        <span class="ai-module-title">Multi-agent arkkitehtuuri</span>
+        <span class="ai-module-tag">Edistynyt</span>
+        <span class="ai-module-arrow">▼</span>
+      </div>
+      <div class="ai-module-body">
+        <p>Yksi agentti on tehokas. Useampi agentti jotka toimivat yhdessä — se on missä asiat muuttuvat mielenkiintoisiksi.</p>
+        <div class="ai-arch">ORCHESTRATOR AGENT (Claude Sonnet 4.6)
+│  Vastaanottaa tehtävän. Suunnittelee. Jakaa työt.
+│  Valvoo kokonaisuutta. Raportoi käyttäjälle.
+│
+├─── RESEARCH AGENT
+│    Hakee dataa webistä, analysoi dokumentteja,
+│    kokoaa faktat. Raportoi orchestratorille.
+│
+├─── CODE AGENT
+│    Kirjoittaa koodin, ajaa testit, korjaa bugit.
+│    Käyttää terminaalia ja tiedostojärjestelmää.
+│
+├─── CONTENT AGENT
+│    Kirjoittaa tekstit, postaukset, raportit.
+│    Optimoi kohderyhmälle ja kanavalle.
+│
+└─── QUALITY AGENT
+     Tarkistaa muiden agentien outputin.
+     Liputtaa virheet. Varmistaa laadun.
+
+→ Tulos: Tehtävä valmis. Ihminen tarkistaa. Hyväksyy.</div>
+        <div class="ai-truth">
+          <strong>// miksi useampi agentti</strong>
+          Erikoistuminen, rinnakkaisuus, laadunvarmistus, skaalautuvuus. Yritykset jotka rakentavat tämän tänään tekevät ensi vuonna saman työn murto-osalla henkilöstöstä.
+        </div>
+      </div>
+    </div>
+
+    <!-- M6 -->
+    <div class="ai-module reveal" onclick="this.classList.toggle('open')">
+      <div class="ai-module-header">
+        <span class="ai-module-num">06</span>
+        <span class="ai-module-title">CLI & kehittynyt käyttö — seuraava taso</span>
+        <span class="ai-module-tag">CLI</span>
+        <span class="ai-module-arrow">▼</span>
+      </div>
+      <div class="ai-module-body">
+        <p>Useimmat käyttävät tekoälyä selaimen kautta. Se on hitainta mitä voit tehdä. CLI avaa täyden voiman — automatisoit, integroit, skaalaat.</p>
+        <div class="ai-arch">
+# Asenna Claude Code
+npm install -g @anthropic-ai/claude-code
+
+# Käynnistä
+claude
+
+# Esimerkki — analysoi projekti
+> Analysoi tämä kansio ja tee yhteenveto
+  arkkitehtuurista ja kolmesta parannuksesta.
+
+# Agentti lukee tiedostot, analysoi, raportoi.</div>
+        <ul class="ai-list">
+          <li>Claude Code toimii suoraan koodieditorissasi (VS Code, Cursor)</li>
+          <li>Kirjoitat mitä haluat rakentaa — se kirjoittaa koodin</li>
+          <li>Ei tarvitse osata koodata — kriittinen ajattelu vaaditaan edelleen</li>
+          <li>Tämä on miten rakensin tämän dashboardin</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div style="background:var(--surface);border:1px solid var(--amber);border-radius:10px;padding:2rem;text-align:center;margin-top:2.5rem;" class="reveal">
+      <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--text-bright);margin-bottom:0.7rem;">Haluatko mennä syvemmälle?</h3>
+      <p style="font-size:0.72rem;color:var(--text-dim);margin-bottom:1.5rem;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.8;">Rakennan yhteisöä suomalaisille jotka haluavat oikeasti oppia rakentamaan tekoälyllä. Agentit, CLI, vapaus.</p>
+      <a href="https://www.instagram.com/axlmethod/" style="display:inline-block;background:var(--amber);color:#050507;font-family:'Syne',sans-serif;font-weight:800;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.9rem 2rem;border-radius:6px;text-decoration:none;">Seuraa @axlmethod</a>
+      <p style="margin-top:1rem;font-size:0.58rem;color:var(--text-dim);">Kommentoi <strong style="color:var(--amber)">AGENTTI</strong> viimeisimpään postaukseen.</p>
+    </div>
+
+  </div>
+</section>
+
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-left">
@@ -1546,3 +1838,4 @@ highlightToday();
 
 </body>
 </html>
+
