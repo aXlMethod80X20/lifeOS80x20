@@ -461,6 +461,126 @@ body::after {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ── HOOK ── */
+.hook-section {
+  text-align: center;
+  padding: 2rem 0 2.5rem;
+  animation: fadeUp 0.6s ease both;
+}
+.hook-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  letter-spacing: 0.04em;
+  color: var(--text-bright);
+  line-height: 1;
+  margin: 1.2rem 0 1rem;
+}
+.hook-accent { color: var(--amber); }
+.hook-sub {
+  font-size: 0.78rem;
+  line-height: 1.8;
+  color: var(--text-dim);
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* ── WEEKLY TRACKER ── */
+.tracker {
+  background: var(--surface);
+  border: 1px solid var(--border-mid);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2.5rem;
+  animation: fadeUp 0.7s ease both 0.1s;
+}
+.tracker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.tracker-week { color: var(--amber); }
+.tracker-desc {
+  font-size: 0.68rem;
+  line-height: 1.7;
+  color: var(--text-dim);
+  margin-bottom: 1.2rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--border);
+}
+.goal-row {
+  margin-bottom: 1rem;
+}
+.goal-input {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border-mid);
+  border-radius: 6px;
+  padding: 0.65rem 0.9rem;
+  color: var(--text-bright);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  outline: none;
+  margin-bottom: 0.5rem;
+  transition: border-color 0.2s;
+}
+.goal-input:focus { border-color: var(--amber); }
+.goal-input::placeholder { color: var(--text-faint); }
+.day-checks {
+  display: flex;
+  gap: 0.35rem;
+}
+.day-btn {
+  flex: 1;
+  padding: 0.3rem 0;
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+.day-btn.done {
+  background: var(--amber-soft);
+  border-color: rgba(232,160,0,0.3);
+  color: var(--amber);
+}
+.tracker-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.tracker-score {
+  font-size: 0.62rem;
+  color: var(--teal);
+  letter-spacing: 0.08em;
+}
+.tracker-reset {
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: none;
+  border: 1px solid var(--border-mid);
+  border-radius: 4px;
+  color: var(--text-dim);
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  transition: all 0.2s;
+}
+.tracker-reset:hover { border-color: var(--text-dim); color: var(--text-bright); }
+
 /* ── DASHBOARD ── */
 .dashboard {
   margin-bottom: 0;
@@ -632,126 +752,44 @@ body::after {
 <body>
 <div class="wrapper">
 
-  <!-- LIFE DASHBOARD -->
-  <div class="dashboard">
-    <div class="dash-header">
-      <span class="dash-label">// elämän OS</span>
-      <span class="dash-status"><span class="dash-dot"></span>live</span>
+  <!-- HOOK -->
+  <div class="hook-section">
+    <div class="badge"><span class="badge-dot"></span> axlmethod · tekoäly 2026</div>
+    <h1 class="hook-title">Pääse <span class="hook-accent">99%</span> edelle<br>tekoälyssä</h1>
+    <p class="hook-sub">Harva ymmärtää mitä tekoäly oikeasti on — tai miten käyttää sitä. Tämä muuttaa sen.</p>
+  </div>
+
+  <!-- WEEKLY TRACKER -->
+  <div class="tracker">
+    <div class="tracker-header">
+      <span class="tracker-label">// viikon tavoitteet</span>
+      <span class="tracker-week" id="tracker-week"></span>
+    </div>
+    <p class="tracker-desc">Kirjoita tämän viikon 3 tavoitettasi. Rastita päivät kun teet edistystä. AI auttaa — sinä teet.</p>
+
+    <div class="goal-row">
+      <input class="goal-input" type="text" placeholder="💪 Esim. Treenaa 4x viikossa" id="g1" oninput="saveGoals()">
+      <div class="day-checks" id="days1"></div>
+    </div>
+    <div class="goal-row">
+      <input class="goal-input" type="text" placeholder="🧠 Esim. Lue 20min tekoälystä" id="g2" oninput="saveGoals()">
+      <div class="day-checks" id="days2"></div>
+    </div>
+    <div class="goal-row">
+      <input class="goal-input" type="text" placeholder="🚀 Esim. Postaa yksi video" id="g3" oninput="saveGoals()">
+      <div class="day-checks" id="days3"></div>
     </div>
 
-    <div class="dash-grid">
-
-      <div class="dash-card" onclick="togglePillar(this)">
-        <div class="dash-card-top">
-          <div class="dash-icon">💪</div>
-          <div class="dash-info">
-            <div class="dash-name">Keho</div>
-            <div class="dash-metric" id="fitness-metric">4 / 5 treeniä</div>
-          </div>
-          <div class="dash-ring-wrap">
-            <svg class="dash-ring" viewBox="0 0 44 44">
-              <circle cx="22" cy="22" r="18" class="ring-bg"/>
-              <circle cx="22" cy="22" r="18" class="ring-fill amber-ring" style="stroke-dasharray: calc(80 * 113.1 / 100) 113.1"/>
-            </svg>
-            <span class="ring-pct amber-text">80%</span>
-          </div>
-        </div>
-        <div class="dash-detail">
-          <div class="dash-week">
-            <span class="day done">Ma</span>
-            <span class="day done">Ti</span>
-            <span class="day done">Ke</span>
-            <span class="day">To</span>
-            <span class="day done">Pe</span>
-            <span class="day">La</span>
-            <span class="day">Su</span>
-          </div>
-          <div class="dash-sub">Voima · Jiu-jitsu · Cardio · Recovery</div>
-        </div>
-      </div>
-
-      <div class="dash-card" onclick="togglePillar(this)">
-        <div class="dash-card-top">
-          <div class="dash-icon">🧬</div>
-          <div class="dash-info">
-            <div class="dash-name">Pitkäikäisyys</div>
-            <div class="dash-metric" id="longevity-metric">7.5h uni · HRV 68</div>
-          </div>
-          <div class="dash-ring-wrap">
-            <svg class="dash-ring" viewBox="0 0 44 44">
-              <circle cx="22" cy="22" r="18" class="ring-bg"/>
-              <circle cx="22" cy="22" r="18" class="ring-fill teal-ring" style="stroke-dasharray: calc(75 * 113.1 / 100) 113.1"/>
-            </svg>
-            <span class="ring-pct teal-text">75%</span>
-          </div>
-        </div>
-        <div class="dash-detail">
-          <div class="dash-habits">
-            <span class="habit done">Uni 7h+</span>
-            <span class="habit done">Aurinko</span>
-            <span class="habit done">Kylmä</span>
-            <span class="habit">Paasto</span>
-            <span class="habit done">Ei alkoholia</span>
-          </div>
-          <div class="dash-sub">Tänään: 4/5 tavoaa saavutettu</div>
-        </div>
-      </div>
-
-      <div class="dash-card" onclick="togglePillar(this)">
-        <div class="dash-card-top">
-          <div class="dash-icon">📈</div>
-          <div class="dash-info">
-            <div class="dash-name">Varallisuus</div>
-            <div class="dash-metric" id="wealth-metric">€50K · S&P + BTC</div>
-          </div>
-          <div class="dash-ring-wrap">
-            <svg class="dash-ring" viewBox="0 0 44 44">
-              <circle cx="22" cy="22" r="18" class="ring-bg"/>
-              <circle cx="22" cy="22" r="18" class="ring-fill amber-ring" style="stroke-dasharray: calc(42 * 113.1 / 100) 113.1"/>
-            </svg>
-            <span class="ring-pct amber-text">42%</span>
-          </div>
-        </div>
-        <div class="dash-detail">
-          <div class="dash-bar-wrap">
-            <div class="dash-bar-label"><span>€0</span><span class="amber-text">€50K → €120K tavoite</span></div>
-            <div class="dash-bar"><div class="dash-bar-fill amber-fill" style="width:42%"></div></div>
-          </div>
-          <div class="dash-sub">80% indeksirahastot · 20% konveksit vedot</div>
-        </div>
-      </div>
-
-      <div class="dash-card" onclick="togglePillar(this)">
-        <div class="dash-card-top">
-          <div class="dash-icon">🚀</div>
-          <div class="dash-info">
-            <div class="dash-name">Vapaus</div>
-            <div class="dash-metric" id="freedom-metric">MRR €0 → €12K</div>
-          </div>
-          <div class="dash-ring-wrap">
-            <svg class="dash-ring" viewBox="0 0 44 44">
-              <circle cx="22" cy="22" r="18" class="ring-bg"/>
-              <circle cx="22" cy="22" r="18" class="ring-fill teal-ring" style="stroke-dasharray: calc(5 * 113.1 / 100) 113.1"/>
-            </svg>
-            <span class="ring-pct teal-text">5%</span>
-          </div>
-        </div>
-        <div class="dash-detail">
-          <div class="dash-bar-wrap">
-            <div class="dash-bar-label"><span>€0 MRR</span><span class="teal-text">Tavoite: €12K → exit</span></div>
-            <div class="dash-bar"><div class="dash-bar-fill teal-fill" style="width:5%"></div></div>
-          </div>
-          <div class="dash-sub">Sisältö → yhteisö → €97/kk → vapaus</div>
-        </div>
-      </div>
-
+    <div class="tracker-footer">
+      <span id="tracker-score" class="tracker-score">0 / 21 päivää tehty</span>
+      <button class="tracker-reset" onclick="resetTracker()">Nollaa viikko</button>
     </div>
   </div>
 
   <!-- SMOOTH TRANSITION -->
   <div class="dash-transition">
     <div class="dash-transition-line"></div>
-    <span class="dash-transition-label">// tekoälykurssi alla</span>
+    <span class="dash-transition-label">// miten tekoäly toimii</span>
     <div class="dash-transition-line"></div>
   </div>
 
@@ -1030,8 +1068,11 @@ body::after {
   <div class="cta-box">
     <div class="cta-title">Haluatko mennä syvemmälle?</div>
     <p class="cta-sub">Rakennan yhteisöä suomalaisille jotka haluavat oikeasti oppia rakentamaan tekoälyllä — ei vain käyttää sitä. Agentit, CLI, rakentaminen, vapaus.</p>
-    <a href="https://www.instagram.com/axlmethod/" class="cta-btn">Seuraa @axlmethod</a>
-    <p style="margin-top:1rem; font-size:0.6rem; color:var(--text-dim);">Yhteisö tulossa. Kommentoi <strong style="color:var(--amber)">AGENTTI</strong> viimeisimpään postaukseen.</p>
+    <div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;">
+      <a href="https://www.instagram.com/axlmethod/" class="cta-btn">Seuraa @axlmethod</a>
+      <a href="https://www.instagram.com/aixfactory/" class="cta-btn" style="background:var(--teal);">Seuraa @aixfactory</a>
+    </div>
+    <p style="margin-top:1rem; font-size:0.6rem; color:var(--text-dim);">Kommentoi <strong style="color:var(--amber)">AGENTTI</strong> viimeisimpään postaukseen → saat lisää.</p>
   </div>
 
   <p class="footer-note">axlmethod80x20 · <a href="https://axlmethod80x20.github.io/lifeOS80x20/">lifeOS dashboard</a> · <a href="https://www.instagram.com/axlmethod/">instagram</a></p>
@@ -1039,18 +1080,77 @@ body::after {
 </div>
 
 <script>
-function toggleModule(el) {
-  el.classList.toggle('open');
+function toggleModule(el) { el.classList.toggle('open'); }
+
+// ── WEEKLY TRACKER ──
+const DAYS = ['Ma','Ti','Ke','To','Pe','La','Su'];
+const WEEK_KEY = 'axl_tracker_' + getWeekKey();
+
+function getWeekKey() {
+  const d = new Date();
+  const jan1 = new Date(d.getFullYear(), 0, 1);
+  return d.getFullYear() + '_' + Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
 }
-function togglePillar(card) {
-  const detail = card.querySelector('.dash-detail');
-  if (!detail) return;
-  detail.style.display = detail.style.display === 'block' ? 'none' : 'block';
+
+function loadTracker() {
+  return JSON.parse(localStorage.getItem(WEEK_KEY) || '{"goals":["","",""],"days":[[],[],[]]}');
 }
-// Hide details by default on mobile, show on desktop
-document.querySelectorAll('.dash-detail').forEach(d => {
-  d.style.display = window.innerWidth > 540 ? 'block' : 'none';
-});
+
+function saveGoals() {
+  const data = loadTracker();
+  ['g1','g2','g3'].forEach((id,i) => { data.goals[i] = document.getElementById(id).value; });
+  localStorage.setItem(WEEK_KEY, JSON.stringify(data));
+}
+
+function toggleDay(goalIdx, dayIdx) {
+  const data = loadTracker();
+  const arr = data.days[goalIdx];
+  const pos = arr.indexOf(dayIdx);
+  if (pos > -1) arr.splice(pos, 1); else arr.push(dayIdx);
+  localStorage.setItem(WEEK_KEY, JSON.stringify(data));
+  renderTracker();
+}
+
+function resetTracker() {
+  localStorage.removeItem(WEEK_KEY);
+  renderTracker();
+  ['g1','g2','g3'].forEach(id => { document.getElementById(id).value = ''; });
+}
+
+function renderTracker() {
+  const data = loadTracker();
+  let total = 0;
+  [0,1,2].forEach(i => {
+    const el = document.getElementById('g' + (i+1));
+    if (el) el.value = data.goals[i] || '';
+    const container = document.getElementById('days' + (i+1));
+    if (!container) return;
+    container.innerHTML = '';
+    DAYS.forEach((day, j) => {
+      const done = data.days[i].includes(j);
+      if (done) total++;
+      const btn = document.createElement('div');
+      btn.className = 'day-btn' + (done ? ' done' : '');
+      btn.textContent = day;
+      btn.onclick = () => toggleDay(i, j);
+      container.appendChild(btn);
+    });
+  });
+  const score = document.getElementById('tracker-score');
+  if (score) score.textContent = total + ' / 21 päivää tehty';
+
+  // Set week label
+  const weekEl = document.getElementById('tracker-week');
+  if (weekEl) {
+    const now = new Date();
+    const mon = new Date(now);
+    mon.setDate(now.getDate() - (now.getDay() || 7) + 1);
+    const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+    weekEl.textContent = mon.getDate() + '.' + (mon.getMonth()+1) + ' — ' + sun.getDate() + '.' + (sun.getMonth()+1);
+  }
+}
+
+renderTracker();
 </script>
 </body>
 </html>
