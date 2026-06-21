@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tekoäly 2026 — axlmethod</title>
+<meta name="description" content="Suomalainen tekoälykurssi. Perusteet, agentit, multi-agent arkkitehtuuri. Pääse 99% edelle.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #050507;
+  --surface: #0b0b12;
+  --surface-2: #101018;
+  --border: #1a1a2e;
+  --border-mid: #1f1f35;
+  --border-light: #262640;
+  --text: #c0c0cc;
+  --text-bright: #ebebf5;
+  --text-dim: #6a6a88;
+  --text-faint: #2e2e48;
+  --amber: #e8a000;
+  --amber-soft: rgba(232,160,0,0.10);
+  --amber-glow: rgba(232,160,0,0.05);
+  --teal: #00c8a0;
+  --teal-soft: rgba(0,200,160,0.10);
+  --teal-glow: rgba(0,200,160,0.04);
+}
+
+html, body {
+  min-height: 100vh;
+  background: var(--bg);
+  background-image:
+    linear-gradient(rgba(232,160,0,0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,160,0,0.022) 1px, transparent 1px);
+  background-size: 52px 52px;
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.038;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120%;
+  max-width: 900px;
+  height: 75vh;
+  background: radial-gradient(ellipse at 50% 0%, rgba(232,160,0,0.09) 0%, rgba(0,200,160,0.035) 45%, transparent 72%);
+  pointer-events: none;
+  z-index: 0;
+  animation: glow-breathe 10s ease-in-out infinite;
+}
+
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.65; }
+  50% { opacity: 1; }
+}
+
+.wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 6rem;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  margin-bottom: 4rem;
+  animation: fadeUp 0.7s ease both;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--amber-soft);
+  border: 1px solid rgba(232,160,0,0.2);
+  border-radius: 100px;
+  padding: 0.35rem 1rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 2rem;
+}
+
+.badge-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 8px var(--teal);
+  animation: dot-blink 2.4s ease-in-out infinite;
+}
+
+@keyframes dot-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.8rem, 8vw, 5rem);
+  letter-spacing: 0.04em;
+  color: var(--text-bright);
+  line-height: 1;
+  margin-bottom: 1.2rem;
+}
+
+.hero-title span {
+  color: var(--amber);
+}
+
+.hero-sub {
+  font-size: 0.78rem;
+  line-height: 1.8;
+  color: var(--text-dim);
+  max-width: 500px;
+  margin: 0 auto 2rem;
+}
+
+.hero-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border-mid);
+  border-radius: 8px;
+  padding: 0.9rem 1.5rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.hero-stat strong {
+  color: var(--amber);
+  font-size: 1.1rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  letter-spacing: 0;
+  display: block;
+}
+
+.hero-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--border-light);
+}
+
+/* MODULE CARDS */
+.module {
+  background: var(--surface);
+  border: 1px solid var(--border-mid);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  animation: fadeUp 0.7s ease both;
+}
+
+.module-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.4rem 1.6rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  user-select: none;
+}
+
+.module-header:hover {
+  background: var(--surface-2);
+}
+
+.module-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  color: var(--amber);
+  min-width: 2.2rem;
+  opacity: 0.6;
+}
+
+.module-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-bright);
+  flex: 1;
+}
+
+.module-tag {
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--teal);
+  background: var(--teal-soft);
+  border: 1px solid rgba(0,200,160,0.15);
+  border-radius: 100px;
+  padding: 0.25rem 0.7rem;
+}
+
+.module-toggle {
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  transition: transform 0.3s;
+}
+
+.module.open .module-toggle {
+  transform: rotate(180deg);
+}
+
+.module-body {
+  display: none;
+  padding: 0 1.6rem 1.6rem;
+  border-top: 1px solid var(--border);
+}
+
+.module.open .module-body {
+  display: block;
+}
+
+.module-body p {
+  font-size: 0.75rem;
+  line-height: 1.9;
+  color: var(--text);
+  margin-bottom: 1.2rem;
+}
+
+.module-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* KEY CONCEPT */
+.key-concept {
+  background: var(--amber-soft);
+  border: 1px solid rgba(232,160,0,0.15);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.2rem;
+  margin: 1.2rem 0;
+  font-size: 0.72rem;
+  line-height: 1.8;
+  color: var(--text-bright);
+}
+
+.key-concept strong {
+  color: var(--amber);
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* TRUTH BOX */
+.truth {
+  background: var(--teal-soft);
+  border: 1px solid rgba(0,200,160,0.15);
+  border-left: 3px solid var(--teal);
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.2rem;
+  margin: 1.2rem 0;
+  font-size: 0.72rem;
+  line-height: 1.8;
+  color: var(--text-bright);
+}
+
+.truth strong {
+  color: var(--teal);
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* COMPARISON TABLE */
+.compare {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.2rem 0;
+  font-size: 0.68rem;
+}
+
+.compare th {
+  text-align: left;
+  padding: 0.7rem 1rem;
+  background: var(--surface-2);
+  color: var(--text-dim);
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-mid);
+}
+
+.compare td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.compare tr:last-child td {
+  border-bottom: none;
+}
+
+.compare .amber { color: var(--amber); }
+.compare .teal { color: var(--teal); }
+.compare .dim { color: var(--text-dim); }
+
+/* ARCHITECTURE DIAGRAM */
+.arch {
+  background: var(--surface-2);
+  border: 1px solid var(--border-mid);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 1.2rem 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  line-height: 1.8;
+  color: var(--text-dim);
+  overflow-x: auto;
+}
+
+.arch .amber { color: var(--amber); }
+.arch .teal { color: var(--teal); }
+.arch .bright { color: var(--text-bright); }
+
+/* CHECKLIST */
+.checklist {
+  list-style: none;
+  margin: 1rem 0;
+}
+
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 0.5rem 0;
+  font-size: 0.72rem;
+  line-height: 1.7;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.checklist li:last-child {
+  border-bottom: none;
+}
+
+.checklist li::before {
+  content: '→';
+  color: var(--amber);
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+/* SECTION DIVIDER */
+.section-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  text-align: center;
+  margin: 3rem 0 1.5rem;
+}
+
+/* CTA */
+.cta-box {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+  border: 1px solid var(--amber);
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  margin-top: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-box::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 200px;
+  background: radial-gradient(ellipse, rgba(232,160,0,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cta-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: 0.05em;
+  color: var(--text-bright);
+  margin-bottom: 0.8rem;
+}
+
+.cta-sub {
+  font-size: 0.72rem;
+  line-height: 1.8;
+  color: var(--text-dim);
+  margin-bottom: 1.8rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-btn {
+  display: inline-block;
+  background: var(--amber);
+  color: #050507;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 1rem 2.2rem;
+  border-radius: 8px;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.cta-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.footer-note {
+  text-align: center;
+  font-size: 0.58rem;
+  color: var(--text-faint);
+  letter-spacing: 0.15em;
+  margin-top: 3rem;
+}
+
+.footer-note a {
+  color: var(--text-dim);
+  text-decoration: none;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.module:nth-child(1) { animation-delay: 0.1s; }
+.module:nth-child(2) { animation-delay: 0.2s; }
+.module:nth-child(3) { animation-delay: 0.3s; }
+.module:nth-child(4) { animation-delay: 0.4s; }
+.module:nth-child(5) { animation-delay: 0.5s; }
+.module:nth-child(6) { animation-delay: 0.6s; }
+
+@media (max-width: 600px) {
+  .hero-stat { flex-direction: column; gap: 0.8rem; }
+  .hero-divider { width: 80px; height: 1px; }
+  .module-tag { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="badge"><span class="badge-dot"></span> axlmethod · tekoäly 2026</div>
+    <h1 class="hero-title">Pääse <span>99%</span><br>edelle tekoälyssä</h1>
+    <p class="hero-sub">Suomalainen kurssi tekoälyn perusteista multi-agent arkkitehtuuriin. Ei hypeä — vain se mitä oikeasti tarvitset.</p>
+    <div class="hero-stat">
+      <div><strong>6</strong>moduulia</div>
+      <div class="hero-divider"></div>
+      <div><strong>~45min</strong>lukuaika</div>
+      <div class="hero-divider"></div>
+      <div><strong>100%</strong>ilmainen</div>
+    </div>
+  </div>
+
+  <div class="section-label">// aloita tästä</div>
+
+  <!-- MODULE 1 -->
+  <div class="module open" onclick="toggleModule(this)">
+    <div class="module-header">
+      <span class="module-num">01</span>
+      <span class="module-title">Mitä tekoäly oikeasti on</span>
+      <span class="module-tag">Perusteet</span>
+      <span class="module-toggle">▼</span>
+    </div>
+    <div class="module-body">
+      <p>Useimmat ihmiset pelkäävät jotain mitä he eivät ymmärrä. Tekoäly ei ole taikuutta — se on matematiikkaa. Kun ymmärrät mitä konepellin alla tapahtuu, pelko katoaa ja kilpailuetu syntyy.</p>
+
+      <div class="key-concept">
+        <strong>// kolme termiä jotka pitää tietää</strong>
+        <strong>AI (Tekoäly)</strong> — Laaja käsite. Kaikki järjestelmät jotka jäljittelevät ihmisen älykkyyttä.<br><br>
+        <strong>ML (Koneoppiminen)</strong> — Tapa rakentaa AI. Annetaan dataa, malli oppii kaavoja. Ei ohjelmoida sääntöjä — opitaan esimerkeistä.<br><br>
+        <strong>GenAI (Generatiivinen tekoäly)</strong> — ML:n alajoukko. Malleja jotka <em>tuottavat</em> sisältöä: tekstiä, koodia, kuvia. Claude ja GPT ovat tätä.
+      </div>
+
+      <p>Generatiiviset mallit — kuten Claude — ovat pohjimmiltaan tilastollisia arvausmoottoreita. Ne ennustavat seuraavaksi todennäköisimmän tokenin (sanan osan) perustuen kaikkeen mitä ne ovat nähneet koulutuksessa.</p>
+
+      <div class="truth">
+        <strong>// totuus jota harva sanoo ääneen</strong>
+        Tekoäly on erittäin kehittynyttä hahmontunnistusta ja tilastollista ennustamista. Se ei "ajattele" eikä "ymmärrä" — se löytää kaavoja datasta hämmästyttävällä tarkkuudella. Tämä ei tee siitä vähemmän hyödyllistä — se tekee siitä <em>ennustettavampaa</em> kun tiedät miten se toimii.
+      </div>
+
+      <p>Miksi tämä tieto on arvokas? Koska kun tiedät että malli ennustaa todennäköistä seuraavaa tokenia, tiedät myös miten antaa sille parempia ohjeita — ja miksi se joskus "hallusinoi" (tuottaa vakuuttavasti väärää tietoa).</p>
+    </div>
+  </div>
+
+  <!-- MODULE 2 -->
+  <div class="module" onclick="toggleModule(this)">
+    <div class="module-header">
+      <span class="module-num">02</span>
+      <span class="module-title">Miksi sinua ei korvata — mutta joku muu voi</span>
+      <span class="module-tag">Kilpailuetu</span>
+      <span class="module-toggle">▼</span>
+    </div>
+    <div class="module-body">
+      <p>Tämä on se lause jonka olet kuullut: <em>"Tekoäly ei korvaa sinua. Tekoälyä käyttävä ihminen korvaa sinut."</em> Se on totta — mutta useimmat eivät ymmärrä mitä se tarkoittaa käytännössä.</p>
+
+      <div class="key-concept">
+        <strong>// mitä "tekoälyä käyttävä" oikeasti tarkoittaa</strong>
+        Ei tarkoita sitä että osaat kirjoittaa promptin ChatGPT:hen. Sen osaa jo kaikki.<br><br>
+        Tarkoittaa sitä että tiedät <em>milloin</em> käyttää tekoälyä, <em>miten</em> kehystää ongelma mallille optimaalisesti, ja <em>miten arvioida</em> output kriittisesti.
+      </div>
+
+      <p>Ajattele niin: juristin työ ei ole kirjoittaa asiakirjoja — se on ajatella oikeudellisesti. Tekoäly kirjoittaa asiakirjat nopeammin kuin koskaan. Juristi joka osaa ohjata tekoälyä hoitaa 5x enemmän asiakkaita. Juristi joka ei osaa — katoaa.</p>
+
+      <ul class="checklist">
+        <li>Rutiinitehtävät katoavat ensin: tiedonhaku, perussisältö, koodibugien etsintä</li>
+        <li>Arvontuotto siirtyy: kriittinen ajattelu, kontekstiymmärrys, päätöksenteko</li>
+        <li>Nopeus ratkaisee: sama työ tunnissa vs. viikossa — kuka valitset?</li>
+        <li>Tekoäly ei poista asiantuntijuuden tarvetta — se poistaa asiantuntijan tarpeen rutiineissa</li>
+      </ul>
+
+      <div class="truth">
+        <strong>// axlin näkökulma pankkimaailmasta</strong>
+        Isot organisaatiot implementoivat tekoälyä hitaasti. Regulaatio, legacy-järjestelmät, byrokraatia. Tämä tarkoittaa että sinulla on 12-18 kuukautta etulyöntiasemaa jos aloitat nyt. Ikkunat sulkeutuvat.
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE 3 -->
+  <div class="module" onclick="toggleModule(this)">
+    <div class="module-header">
+      <span class="module-num">03</span>
+      <span class="module-title">GPT vs Claude vs muut — kumpi milloin</span>
+      <span class="module-tag">Työkalut</span>
+      <span class="module-toggle">▼</span>
+    </div>
+    <div class="module-body">
+      <p>Markkinoilla on kymmeniä malleja. Useimmat ihmiset käyttävät ensimmäistä mitä kuulivat. Tässä on rehellinen vertailu 2026.</p>
+
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Malli</th>
+            <th>Vahvuus</th>
+            <th>Käytä kun</th>
+            <th>Hinta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="amber">Claude Sonnet 4.6</td>
+            <td>Pitkät kontekstit, koodaus, reasoning, turvallisuus</td>
+            <td>Syvällinen analyysi, koodin kirjoitus, monimutkaiset tehtävät</td>
+            <td class="teal">$20/kk</td>
+          </tr>
+          <tr>
+            <td class="amber">Claude Haiku 4.5</td>
+            <td>Nopeus, hinta, yksinkertaiset tehtävät</td>
+            <td>Massatuotanto, nopeat vastaukset, API-integraatiot</td>
+            <td class="teal">Halpa API</td>
+          </tr>
+          <tr>
+            <td>GPT-4o</td>
+            <td>Kuvien analysointi, plugin-ekosysteemi</td>
+            <td>Kuva-analyysi, kun tarvitset OpenAI-ekosysteemiä</td>
+            <td class="dim">$20/kk</td>
+          </tr>
+          <tr>
+            <td>Gemini 2.5 Pro</td>
+            <td>Erittäin pitkä konteksti, Google-integraatio</td>
+            <td>Dokumenttianalyysi, YouTube-videot, Google Workspace</td>
+            <td class="dim">Ilmainen/Pro</td>
+          </tr>
+          <tr>
+            <td>Llama 3 (lokaali)</td>
+            <td>Yksityisyys, ilmainen, offline</td>
+            <td>Arkaluontoinen data, ei pilveä, ei kuluja</td>
+            <td class="teal">Ilmainen</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="key-concept">
+        <strong>// axlin stack 2026</strong>
+        Claude Code CLI päivittäiseen koodaukseen ja analyysiin. Claude.ai chatissa. Gemini dokumentteihin. Lokaali malli arkaluonteiseen dataan. Ei uskollista yhdelle — käytä oikeaa työkalua oikeaan tehtävään.
+      </div>
+
+      <p>Tärkein asia: mallien väliset erot pienenevät joka vuosi. Osaaminen siirtyy promptaukseen ja arkkitehtuuriin — ei siihen kumman logon valitset.</p>
+    </div>
+  </div>
+
+  <!-- MODULE 4 -->
+  <div class="module" onclick="toggleModule(this)">
+    <div class="module-header">
+      <span class="module-num">04</span>
+      <span class="module-title">Agentit — tekoäly joka tekee eikä vain vastaa</span>
+      <span class="module-tag">Agentit</span>
+      <span class="module-toggle">▼</span>
+    </div>
+    <div class="module-body">
+      <p>Tähän asti olet ehkä käyttänyt tekoälyä chatbottina: kysyt, se vastaa. Agentit ovat eri asia. Ne <em>toimivat</em> — suunnittelevat, tekevät päätöksiä, käyttävät työkaluja, tarkistavat tuloksia.</p>
+
+      <div class="key-concept">
+        <strong>// agentti vs chatbotti</strong>
+        <strong>Chatbotti:</strong> "Kirjoita minulle sähköposti." → Saat sähköpostin. Valmis.<br><br>
+        <strong>Agentti:</strong> "Hoida asiakasviestintä tänään." → Lukee sähköpostit, priorisoi, kirjoittaa vastaukset, lähettää, raportoi sinulle. Itse.
+      </div>
+
+      <p>Agentin neljä komponenttia:</p>
+
+      <ul class="checklist">
+        <li><strong style="color:var(--amber)">LLM (Aivot)</strong> — päättelee, suunnittelee, generoi</li>
+        <li><strong style="color:var(--amber)">Työkalut (Kädet)</strong> — web-haku, koodin ajo, tiedostot, API:t</li>
+        <li><strong style="color:var(--amber)">Muisti (Konteksti)</strong> — mitä on tehty, mitä tiedetään</li>
+        <li><strong style="color:var(--amber)">Tavoite (Kompassi)</strong> — mitä ollaan saavuttamassa</li>
+      </ul>
+
+      <div class="truth">
+        <strong>// käytännön esimerkki</strong>
+        Claude Code on agentti. Kerrot mitä haluat rakentaa. Se lukee koodisi, suunnittelee muutokset, kirjoittaa koodin, ajaa testit, korjaa virheet — ja raportoi kun valmis. Et ohjelmoi. Ohjaat.
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE 5 -->
+  <div class="module" onclick="toggleModule(this)">
+    <div class="module-header">
+      <span class="module-num">05</span>
+      <span class="module-title">Multi-agent arkkitehtuuri</span>
+      <span class="module-tag">Edistynyt</span>
+      <span class="module-toggle">▼</span>
+    </div>
+    <div class="module-body">
+      <p>Yksi agentti on tehokas. Useampi agentti jotka toimivat yhdessä — se on missä asiat muuttuvat mielenkiintoisiksi.</p>
+
+      <div class="arch">
+<span class="bright">ORCHESTRATOR AGENT</span> <span class="amber">(Claude Sonnet 4.6)</span>
+<span class="dim">│  Vastaanottaa tehtävän. Suunnittelee. Jakaa työt.</span>
+<span class="dim">│  Valvoo kokonaisuutta. Raportoi käyttäjälle.</span>
+│
+├─── <span class="teal">RESEARCH AGENT</span>
+│    <span class="dim">Hakee dataa webistä, analysoi dokumentteja,</span>
+│    <span class="dim">kokoaa faktat. Raportoi orchestratorille.</span>
+│
+├─── <span class="teal">CODE AGENT</span>
+│    <span class="dim">Kirjoittaa koodin, ajaa testit, korjaa bugit.</span>
+│    <span class="dim">Käyttää terminaalia ja tiedostojärjestelmää.</span>
+│
+├─── <span class="teal">CONTENT AGENT</span>
+│    <span class="dim">Kirjoittaa tekstit, postaukset, raportit.</span>
+│    <span class="dim">Optimoi kohderyhmälle ja kanavalle.</span>
+│
+└─── <span class="teal">QUALITY AGENT</span>
+     <span class="dim">Tarkistaa muiden agentien outputin.</span>
+     <span class="dim">Liputtaa virheet. Varmistaa laadun.</span>
+
+<span class="amber">→ Tulos: Tehtävä valmis. Ihminen tarkistaa. Hyväksyy.</span>
+      </div>
+
+      <p>Tämä ei ole tulevaisuutta — tämä on nyt. Yritykset jotka rakentavat multi-agent pipelinen tänään tekevät ensi vuonna saman työn murto-osalla henkilöstöstä.</p>
+
+      <div class="key-concept">
+        <strong>// miksi useampi agentti yhden sijaan</strong>
+        Erikoistuminen: kukin agentti on optimoitu yhteen tehtävään.<br>
+        Rinnakkaisuus: agentit toimivat samanaikaisesti, ei peräkkäin.<br>
+        Laadunvarmistus: agentti tarkistaa toisen agentin työn.<br>
+        Skaalautuvuus: lisää agentteja tarpeen mukaan.
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE 6 -->
+  <div class="module" onclick="toggleModule(this)">
+    <div class="module-header">
+      <span class="module-num">06</span>
+      <span class="module-title">CLI & kehittynyt käyttö — seuraava taso</span>
+      <span class="module-tag">CLI</span>
+      <span class="module-toggle">▼</span>
+    </div>
+    <div class="module-body">
+      <p>Useimmat käyttävät tekoälyä selaimen kautta. Se on hitainta mitä voit tehdä. CLI (Command Line Interface) avaa täyden voiman — automatisoit, integroit, skaalaat.</p>
+
+      <div class="key-concept">
+        <strong>// miksi CLI eikä selain</strong>
+        Selain: yksi tehtävä kerrallaan, manuaalinen, ei automatisoitavissa.<br><br>
+        CLI: skriptit, putket, automaatio, integraatiot — tekoäly osana tuotantojärjestelmää.
+      </div>
+
+      <p>Claude Code on Anthropicin virallinen CLI. Asennat sen terminaaliin ja se toimii agenttina suoraan tietokoneellasi — lukee tiedostoja, kirjoittaa koodia, ajaa komentoja.</p>
+
+      <div class="arch">
+<span class="dim"># Asenna Claude Code</span>
+<span class="amber">npm install -g @anthropic-ai/claude-code</span>
+
+<span class="dim"># Käynnistä projektikontext</span>
+<span class="amber">claude</span>
+
+<span class="dim"># Esimerkki — analysoi kansio ja tee raportti</span>
+<span class="teal">> Analysoi tämä projekti ja tee yhteenveto</span>
+<span class="teal">  arkkitehtuurista, teknisestä velasta ja</span>
+<span class="teal">  kolmesta tärkeimmästä parannuksesta.</span>
+
+<span class="dim"># Agentti lukee tiedostot, analysoi, raportoi.</span>
+<span class="dim"># Sinä hyväksyt tai pyydät tarkennuksia.</span>
+      </div>
+
+      <ul class="checklist">
+        <li>Claude Code toimii suoraan koodieditorissasi (VS Code, Cursor)</li>
+        <li>Voit antaa sille kokonaisen projektin — se ymmärtää kontekstin</li>
+        <li>Kirjoitat mitä haluat rakentaa — se kirjoittaa koodin</li>
+        <li>Ei tarvitse osata koodata — mutta kriittinen ajattelu vaaditaan edelleen</li>
+        <li>Tämä on miten rakensin lifeOS80x20 dashboardin</li>
+      </ul>
+
+      <div class="truth">
+        <strong>// rehellinen arvio CLI:stä</strong>
+        CLI ei ole aloittelijalle intuitiivinen. Oppimiskäyrä on olemassa. Mutta se on sama käyrä jonka 99% ei jaksa kiivetä — ja siksi se on kilpailuetu.
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-box">
+    <div class="cta-title">Haluatko mennä syvemmälle?</div>
+    <p class="cta-sub">Rakennan yhteisöä suomalaisille jotka haluavat oikeasti oppia rakentamaan tekoälyllä — ei vain käyttää sitä. Agentit, CLI, rakentaminen, vapaus.</p>
+    <a href="https://www.instagram.com/axlmethod/" class="cta-btn">Seuraa @axlmethod</a>
+    <p style="margin-top:1rem; font-size:0.6rem; color:var(--text-dim);">Yhteisö tulossa. Kommentoi <strong style="color:var(--amber)">AGENTTI</strong> viimeisimpään postaukseen.</p>
+  </div>
+
+  <p class="footer-note">axlmethod80x20 · <a href="https://axlmethod80x20.github.io/lifeOS80x20/">lifeOS dashboard</a> · <a href="https://www.instagram.com/axlmethod/">instagram</a></p>
+
+</div>
+
+<script>
+function toggleModule(el) {
+  el.classList.toggle('open');
+}
+</script>
+</body>
+</html>
